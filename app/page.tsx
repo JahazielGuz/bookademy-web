@@ -53,6 +53,12 @@ export default async function Home() {
                 I already have an account
               </Link>
             </div>
+
+            <p className="mt-6 max-w-lg text-sm leading-relaxed text-muted">
+              <span className="text-text">One requirement:</span> your PDF needs a
+              table of contents — the clickable chapter list most published books
+              have. Scanned books usually don&rsquo;t.
+            </p>
           </div>
 
           <GhostDemo />
@@ -76,9 +82,10 @@ export default async function Home() {
               <span className="font-mono text-sm text-accent">01</span>
               <h3 className="mt-2 font-semibold">Upload a PDF</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                Any programming book you own. BooKademy reads its structure from the
-                document itself, so the chapters are the book&rsquo;s real chapters —
-                not an approximation.
+                Any programming book you own, as long as it has a table of contents.
+                BooKademy reads the chapters and their page ranges straight from it,
+                which is why they are the book&rsquo;s real chapters rather than a
+                guess — and why a scanned PDF, which has no such list, cannot be used.
               </p>
             </div>
             <div>
