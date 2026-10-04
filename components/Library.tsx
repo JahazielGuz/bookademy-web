@@ -72,8 +72,13 @@ export default function Library({ initialDocuments }: LibraryProps) {
   return (
     <div className="space-y-8">
       <div className="rounded-lg border border-dashed border-line p-6 text-center">
-        <p className="mb-3 text-sm text-muted">
+        <p className="mb-2 text-sm text-muted">
           Upload a PDF and it will be turned into a syllabus with quizzes and exercises.
+        </p>
+        <p className="mx-auto mb-4 max-w-md text-xs leading-relaxed text-muted">
+          It must have a table of contents — the chapter list your PDF reader shows in
+          its sidebar. The syllabus is read from there, so books without one cannot be
+          used. Scanned PDFs usually have none.
         </p>
         <label className="inline-block cursor-pointer rounded bg-accent px-4 py-2 text-sm font-medium text-black">
           {uploading ? "Uploading…" : "Choose a PDF"}
