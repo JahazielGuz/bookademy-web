@@ -146,7 +146,9 @@ const decorationField = StateField.define<DecorationSet>({
 });
 
 const editorTheme = EditorView.theme({
+  // The editor fills the pane it is given; the pane decides when to scroll.
   "&": { fontSize: "14px", height: "100%" },
+  ".cm-scroller": { overflow: "auto" },
   ".cm-content": { fontFamily: "var(--font-mono)", padding: "12px 0" },
   ".cm-ghost": { color: "var(--ghost)" },
   ".cm-ghost-block": { color: "var(--ghost)", whiteSpace: "pre" },
@@ -245,5 +247,5 @@ export default function GhostEditor({
     });
   }, [language, readOnly]);
 
-  return <div ref={host} className="h-full overflow-auto" />;
+  return <div ref={host} className="h-full" />;
 }

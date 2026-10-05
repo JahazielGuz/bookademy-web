@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0f1115;
-  --surface: #161920;
-  --surface-2: #1e222b;
-  --line: #2a2f3a;
-  --text: #e6e8ec;
-  --muted: #9aa3b2;
-  --accent: #7dd3a0;
-  --pass: #7dd3a0;
-  --fail: #f2777a;
+  /* Lightened across the board. The previous values sat between #0f1115 and #1e222b,
+     which read as near-black on most screens and left too little separation between
+     a surface and the page behind it. */
+  --bg: #1b202a;
+  --surface: #242a36;
+  --surface-2: #2e3542;
+  --line: #3f4858;
+  --text: #f1f4f9;
+  --muted: #aab4c5;
+  --accent: #8ddcae;
+  --pass: #8ddcae;
+  --fail: #f08a8d;
   /* The ghost text: readable enough to copy, dim enough to read as a prompt. */
-  --ghost: #5a6373;
-  --error-line: rgba(242, 119, 122, 0.12);
+  --ghost: #6f7a8d;
+  --error-line: rgba(240, 138, 141, 0.14);
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
