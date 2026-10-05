@@ -45,6 +45,12 @@ export default function DocumentRow({ document }: DocumentRowProps) {
           {status(document)}
           {document.page_count !== null ? ` · ${document.page_count} pages` : ""}
         </p>
+        {document.calls_made > 0 ? (
+          <p className="mt-0.5 text-xs text-muted">
+            {/* Measured from recorded usage, not estimated. */}
+            ${document.cost_usd.toFixed(2)} spent · {document.calls_made} calls
+          </p>
+        ) : null}
         {document.status === "failed" && document.error.length > 0 ? (
           <p className="mt-1 text-sm text-fail">{document.error}</p>
         ) : null}
