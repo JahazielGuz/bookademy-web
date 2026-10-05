@@ -145,16 +145,37 @@ const decorationField = StateField.define<DecorationSet>({
   provide: (field) => EditorView.decorations.from(field),
 });
 
-const editorTheme = EditorView.theme({
-  // The editor fills the pane it is given; the pane decides when to scroll.
-  "&": { fontSize: "14px", height: "100%" },
-  ".cm-scroller": { overflow: "auto" },
-  ".cm-content": { fontFamily: "var(--font-mono)", padding: "12px 0" },
-  ".cm-ghost": { color: "var(--ghost)" },
-  ".cm-ghost-block": { color: "var(--ghost)", whiteSpace: "pre" },
-  ".cm-error-line": { backgroundColor: "var(--error-line)" },
-  "&.cm-focused": { outline: "none" },
-});
+// The editor is the one dark surface on a light page, so it takes the code palette
+// rather than inheriting the page's.
+const editorTheme = EditorView.theme(
+  {
+    // The editor fills the pane it is given; the pane decides when to scroll.
+    "&": {
+      fontSize: "14px",
+      height: "100%",
+      backgroundColor: "var(--code-bg)",
+      color: "var(--code-text)",
+    },
+    ".cm-scroller": { overflow: "auto" },
+    ".cm-content": { fontFamily: "var(--font-mono)", padding: "12px 0", caretColor: "var(--code-text)" },
+    ".cm-gutters": {
+      backgroundColor: "var(--code-bg)",
+      color: "var(--code-muted)",
+      border: "none",
+    },
+    ".cm-activeLine": { backgroundColor: "rgba(255,255,255,0.03)" },
+    ".cm-activeLineGutter": { backgroundColor: "transparent" },
+    ".cm-cursor": { borderLeftColor: "var(--code-text)" },
+    ".cm-selectionBackground, &.cm-focused .cm-selectionBackground": {
+      backgroundColor: "rgba(120,140,200,0.30)",
+    },
+    ".cm-ghost": { color: "var(--ghost)" },
+    ".cm-ghost-block": { color: "var(--ghost)", whiteSpace: "pre" },
+    ".cm-error-line": { backgroundColor: "var(--error-line)" },
+    "&.cm-focused": { outline: "none" },
+  },
+  { dark: true },
+);
 
 function languageSupport(language: Language) {
   return language === "python" ? python() : javascript();

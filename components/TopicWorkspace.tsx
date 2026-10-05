@@ -156,7 +156,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                         <span
                           aria-hidden
                           className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border text-[11px]
-                            ${passed ? "border-pass bg-pass text-black" : "border-line text-muted"}`}
+                            ${passed ? "border-pass bg-pass text-white" : "border-line text-muted"}`}
                         >
                           {passed ? "✓" : candidate.number}
                         </span>
@@ -201,10 +201,10 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
       </div>
 
       {/* Code pane. Fixed to the right half; only the editor's own content scrolls. */}
-      <div className="flex w-1/2 flex-col bg-surface">
+      <div className="flex w-1/2 flex-col bg-code-bg text-code-text">
         {exercise !== null && step !== null ? (
           <>
-            <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-2.5 text-xs text-muted">
+            <div className="flex shrink-0 items-center justify-between border-b border-code-line px-5 py-2.5 text-xs text-code-muted">
               <span className="font-mono">
                 {exercise.language === "python" ? "main.py" : "main.js"}
               </span>
@@ -225,12 +225,12 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
               />
             </div>
 
-            <div className="flex shrink-0 flex-wrap items-center gap-3 border-t border-line px-5 py-3">
+            <div className="flex shrink-0 flex-wrap items-center gap-3 border-t border-code-line px-5 py-3">
               <button
                 type="button"
                 onClick={runCheck}
                 disabled={check.kind === "checking"}
-                className="rounded bg-accent px-4 py-2 text-sm font-medium text-black disabled:opacity-50"
+                className="rounded bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-50"
               >
                 {check.kind === "checking" ? "Checking…" : "Check"}
               </button>
@@ -239,7 +239,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                 <button
                   type="button"
                   onClick={() => goToStep(stepIndex + 1)}
-                  className="rounded border border-line px-4 py-2 text-sm font-medium"
+                  className="rounded border border-code-line px-4 py-2 text-sm font-medium text-code-text"
                 >
                   Next
                 </button>
@@ -249,7 +249,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                 <button
                   type="button"
                   onClick={goToNextExercise}
-                  className="rounded border border-line px-4 py-2 text-sm font-medium"
+                  className="rounded border border-code-line px-4 py-2 text-sm font-medium text-code-text"
                 >
                   Next exercise
                 </button>
@@ -270,7 +270,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
             </div>
           </>
         ) : (
-          <div className="grid flex-1 place-items-center px-8 text-center text-sm text-muted">
+          <div className="grid flex-1 place-items-center px-8 text-center text-sm text-code-muted">
             This topic has no coding exercise.
           </div>
         )}

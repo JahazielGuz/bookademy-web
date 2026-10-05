@@ -1,21 +1,38 @@
 @import "tailwindcss";
 
+/* Two palettes on one page, as in the reference.
+ *
+ * Everything you read is light: white page, near-black text, grey rules. Everything
+ * you type into is dark: the editor pane keeps its own set of variables so the code
+ * surface does not inherit the page around it. Mixing them in one scale is what makes
+ * a split like this look accidental.
+ *
+ * The accent is the reference's yellow, which only works with dark text on it — hence
+ * --on-accent rather than assuming white. */
 :root {
-  /* Lightened across the board. The previous values sat between #0f1115 and #1e222b,
-     which read as near-black on most screens and left too little separation between
-     a surface and the page behind it. */
-  --bg: #1b202a;
-  --surface: #242a36;
-  --surface-2: #2e3542;
-  --line: #3f4858;
-  --text: #f1f4f9;
-  --muted: #aab4c5;
-  --accent: #8ddcae;
-  --pass: #8ddcae;
-  --fail: #f08a8d;
-  /* The ghost text: readable enough to copy, dim enough to read as a prompt. */
-  --ghost: #6f7a8d;
-  --error-line: rgba(240, 138, 141, 0.14);
+  --bg: #ffffff;
+  --surface: #f6f7f9;
+  --surface-2: #eceef2;
+  --line: #d8dce3;
+  --text: #15171c;
+  --muted: #5a626f;
+
+  --accent: #f5c518;
+  --on-accent: #1a1a1a;
+
+  --pass: #157f4d;
+  --fail: #c0392b;
+
+  /* The code pane. Dark regardless of the page. */
+  --code-bg: #1b2135;
+  --code-surface: #232a42;
+  --code-line: #343d5c;
+  --code-text: #e7eaf4;
+  --code-muted: #8b94b0;
+  /* Grey enough to read as a prompt, light enough to copy from on a dark ground. */
+  --ghost: #6e7899;
+  --error-line: rgba(240, 120, 124, 0.18);
+
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
@@ -27,9 +44,15 @@
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
   --color-pass: var(--pass);
   --color-fail: var(--fail);
   --color-ghost: var(--ghost);
+  --color-code-bg: var(--code-bg);
+  --color-code-surface: var(--code-surface);
+  --color-code-line: var(--code-line);
+  --color-code-text: var(--code-text);
+  --color-code-muted: var(--code-muted);
 }
 
 body {
@@ -53,6 +76,8 @@ body {
 .prose-bk li {
   margin: 0.25rem 0;
 }
+/* Inline code sits in running text, so it stays light. Blocks are listings and read
+   as code, so they take the editor's colours — the same split as the panes. */
 .prose-bk code {
   font-family: var(--font-mono);
   font-size: 0.875em;
@@ -61,8 +86,9 @@ body {
   border-radius: 3px;
 }
 .prose-bk pre {
-  background: var(--surface-2);
-  border: 1px solid var(--line);
+  background: var(--code-bg);
+  color: var(--code-text);
+  border: 1px solid var(--code-line);
   border-radius: 6px;
   padding: 0.75rem;
   overflow-x: auto;
@@ -70,9 +96,10 @@ body {
 }
 .prose-bk pre code {
   background: none;
+  color: inherit;
   padding: 0;
 }
 .prose-bk a {
-  color: var(--accent);
+  color: #1766c0;
   text-decoration: underline;
 }
