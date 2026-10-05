@@ -21,7 +21,7 @@ export default async function Home() {
           </Link>
           <Link
             href="/register"
-            className="rounded bg-accent px-3.5 py-1.5 font-medium text-black"
+            className="rounded bg-accent px-3.5 py-1.5 font-medium text-on-accent"
           >
             Start free
           </Link>
@@ -45,7 +45,7 @@ export default async function Home() {
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="rounded bg-accent px-5 py-2.5 font-medium text-black"
+                className="rounded bg-accent px-5 py-2.5 font-medium text-on-accent"
               >
                 Upload your first PDF
               </Link>
@@ -155,7 +155,7 @@ export default async function Home() {
           </p>
           <Link
             href="/register"
-            className="mt-9 inline-block rounded bg-accent px-6 py-3 font-medium text-black"
+            className="mt-9 inline-block rounded bg-accent px-6 py-3 font-medium text-on-accent"
           >
             Create an account
           </Link>

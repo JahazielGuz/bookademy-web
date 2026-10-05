@@ -153,7 +153,7 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
                 <span
                   aria-hidden
                   className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border text-[11px]
-                    ${topic.complete ? "border-pass bg-pass text-black" : "border-line text-muted"}`}
+                    ${topic.complete ? "border-pass bg-pass text-white" : "border-line text-muted"}`}
                 >
                   {topic.complete ? "✓" : ""}
                 </span>

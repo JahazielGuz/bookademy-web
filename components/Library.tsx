@@ -63,7 +63,7 @@ export default function Library({ initialDocuments }: LibraryProps) {
           its sidebar. The syllabus is read from there, so books without one cannot be
           used. Scanned PDFs usually have none.
         </p>
-        <label className="inline-block cursor-pointer rounded bg-accent px-4 py-2 text-sm font-medium text-black">
+        <label className="inline-block cursor-pointer rounded bg-accent px-4 py-2 text-sm font-medium text-on-accent">
           {uploading ? "Uploading…" : "Choose a PDF"}
           <input
             ref={fileInput}
