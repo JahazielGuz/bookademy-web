@@ -48,7 +48,11 @@ export default function DocumentRow({ document }: DocumentRowProps) {
         {document.calls_made > 0 ? (
           <p className="mt-0.5 text-xs text-muted">
             {/* Measured from recorded usage, not estimated. */}
-            ${document.cost_usd.toFixed(2)} spent · {document.calls_made} calls
+            ${document.cost_usd.toFixed(2)}
+            {document.spend_limit_usd > 0
+              ? ` of $${document.spend_limit_usd.toFixed(2)} limit`
+              : " spent"}{" "}
+            · {document.calls_made} calls
           </p>
         ) : null}
         {document.status === "failed" && document.error.length > 0 ? (

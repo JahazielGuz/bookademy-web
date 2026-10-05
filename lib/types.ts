@@ -26,6 +26,7 @@ export type DocumentSummary = {
   chapters_ready: number;
   cost_usd: number;
   calls_made: number;
+  spend_limit_usd: number;
 };
 
 export type TopicSummary = {
