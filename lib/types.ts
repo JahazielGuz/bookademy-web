@@ -22,6 +22,8 @@ export type DocumentSummary = {
   syllabus_id: number | null;
   topics_total: number;
   topics_ready: number;
+  chapters_total: number;
+  chapters_ready: number;
 };
 
 export type TopicSummary = {
