@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import DocumentRow from "@/components/DocumentRow";
 import type { DocumentSummary } from "@/lib/types";
 
 export type LibraryProps = {
@@ -10,23 +10,6 @@ export type LibraryProps = {
 };
 
 const IN_PROGRESS = ["pending", "uploading", "outlining", "generating"];
-
-function statusLabel(document: DocumentSummary): string {
-  switch (document.status) {
-    case "pending":
-      return "Queued";
-    case "uploading":
-      return "Reading the PDF";
-    case "outlining":
-      return "Working out the syllabus";
-    case "generating":
-      return `Writing lessons — ${document.topics_ready} of ${document.topics_total} topics`;
-    case "ready":
-      return `${document.topics_total} topics`;
-    case "failed":
-      return "Failed";
-  }
-}
 
 export default function Library({ initialDocuments }: LibraryProps) {
   const [documents, setDocuments] = useState(initialDocuments);
@@ -98,35 +81,11 @@ export default function Library({ initialDocuments }: LibraryProps) {
         <p className="text-sm text-muted">Nothing here yet.</p>
       ) : (
         <ul className="space-y-3">
-          {documents.map((document) => {
-            // Always openable: the course page is where the live progress is, so
-            // there is something worth seeing long before anything is ready.
-            const row = (
-              <div className="flex items-center justify-between rounded-lg border border-line bg-surface px-4 py-3">
-                <div className="min-w-0">
-                  <p className="truncate font-medium">{document.title}</p>
-                  <p className="text-sm text-muted">
-                    {statusLabel(document)}
-                    {document.page_count !== null ? ` · ${document.page_count} pages` : ""}
-                  </p>
-                  {document.status === "failed" && document.error.length > 0 ? (
-                    <p className="mt-1 text-sm text-fail">{document.error}</p>
-                  ) : null}
-                </div>
-                {IN_PROGRESS.includes(document.status) ? (
-                  <span className="text-xs text-muted">working…</span>
-                ) : null}
-              </div>
-            );
-
-            return (
-              <li key={document.id}>
-                <Link href={`/courses/${document.id}`} className="block hover:opacity-90">
-                  {row}
-                </Link>
-              </li>
-            );
-          })}
+          {documents.map((document) => (
+            <li key={document.id}>
+              <DocumentRow document={document} />
+            </li>
+          ))}
         </ul>
       )}
     </div>
