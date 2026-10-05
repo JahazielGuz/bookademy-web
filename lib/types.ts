@@ -24,6 +24,8 @@ export type DocumentSummary = {
   topics_ready: number;
   chapters_total: number;
   chapters_ready: number;
+  cost_usd: number;
+  calls_made: number;
 };
 
 export type TopicSummary = {
