@@ -63,7 +63,7 @@ export default function DocumentRow({ document }: DocumentRowProps) {
       {openable ? (
         <Link
           href={`/courses/${document.id}`}
-          className="shrink-0 rounded bg-accent px-4 py-2 text-sm font-medium text-black"
+          className="shrink-0 rounded bg-accent px-4 py-2 text-sm font-medium text-on-accent"
         >
           {working ? "Start learning →" : "Open course →"}
         </Link>

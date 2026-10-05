@@ -110,7 +110,7 @@ export default function QuizPanel({ quiz }: QuizPanelProps) {
             type="button"
             onClick={submit}
             disabled={answered < quiz.questions.length || submitting}
-            className="rounded bg-accent px-4 py-2 text-sm font-medium text-black disabled:opacity-50"
+            className="rounded bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50"
           >
             {submitting ? "Marking…" : "Submit answers"}
           </button>

@@ -83,7 +83,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       <button
         type="submit"
         disabled={busy}
-        className="w-full rounded bg-accent px-4 py-2 font-medium text-black disabled:opacity-50"
+        className="w-full rounded bg-accent px-4 py-2 font-medium text-on-accent disabled:opacity-50"
       >
         {mode === "register" ? "Create account" : "Sign in"}
       </button>
