@@ -14,11 +14,12 @@
   --surface: #f6f7f9;
   --surface-2: #eceef2;
   --line: #d8dce3;
-  --text: #0f1117;
-  /* Secondary text, not faint text. The earlier value passed contrast checks and
-   * still read as greyed-out on a white page, which made summaries and explanations
-   * look like disabled controls rather than prose. */
-  --muted: #39404e;
+  --text: #0a0a0a;
+  /* Barely secondary at all, and deliberately so. Every grey tried here read as
+   * faded next to the reference, where a summary, an explanation and an instruction
+   * you have already finished are all the same near-black. Hierarchy on this page
+   * comes from size and weight; colour is not asked to carry any of it. */
+  --muted: #1b1c20;
 
   --accent: #f5c518;
   --on-accent: #1a1a1a;
