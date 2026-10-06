@@ -77,7 +77,7 @@ export default function CourseView({
         <p className="text-xs uppercase tracking-wide text-muted">
           {syllabus?.subject ?? "Reading your document"}
         </p>
-        <h1 className="text-3xl font-semibold">{syllabus?.title ?? initialDocument.title}</h1>
+        <h1 className="text-3xl font-bold">{syllabus?.title ?? initialDocument.title}</h1>
         {syllabus !== null ? <p className="text-muted">{syllabus.description}</p> : null}
       </header>
 
@@ -117,7 +117,7 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
     <li className={`${chapter.status === "pending" ? "opacity-45" : ""}`}>
       <div className="mb-3 flex items-baseline justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-lg font-bold">
             {chapter.number}. {chapter.title}
           </h2>
           <p className="text-sm text-muted">

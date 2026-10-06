@@ -33,7 +33,7 @@ export default function TopicAccordion({ topic, documentId }: TopicAccordionProp
       >
         <Tick complete={topic.complete} />
         <span className="min-w-0 flex-1">
-          <span className="block font-medium">{topic.title}</span>
+          <span className="block font-bold">{topic.title}</span>
           <span className="block truncate text-sm text-muted">{topic.summary}</span>
         </span>
         {!ready ? (
@@ -82,8 +82,8 @@ function Part({ href, label, title, detail, done }: PartProps) {
   return (
     <Link href={href} className="flex items-center gap-3 rounded px-3 py-2 hover:bg-surface">
       <Tick complete={done} small />
-      <span className="w-16 shrink-0 text-sm text-muted">{label}</span>
-      <span className="min-w-0 flex-1 truncate text-sm">{title}</span>
+      <span className="w-16 shrink-0 text-sm font-semibold text-muted">{label}</span>
+      <span className="min-w-0 flex-1 truncate text-sm font-medium">{title}</span>
       {detail !== undefined ? (
         <span className="shrink-0 text-xs text-muted">{detail}</span>
       ) : null}
