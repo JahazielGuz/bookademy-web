@@ -16,7 +16,7 @@ import {
 } from "@codemirror/view";
 import { useEffect, useRef } from "react";
 
-import { ghostFor } from "@/components/ghostText";
+import { ghostFor, mismatchesFor } from "@/components/ghostText";
 import type { Language } from "@/lib/types";
 
 export type GhostEditorProps = {
@@ -114,7 +114,24 @@ function buildDecorations(state: EditorState): DecorationSet {
 
   const expected = state.field(expectedField);
   if (expected.length > 0) {
-    const { at, text } = ghostFor(state.doc.toString(), expected);
+    const buffer = state.doc.toString();
+
+    // Anything typed that the target does not have, marked where it was typed. The
+    // learner sees which characters are wrong rather than a check that only says no:
+    // `function canDrbbb` points at the `bbb`.
+    const wrong = mismatchesFor(buffer, expected);
+    for (const mark of wrong) {
+      ranges.push(Decoration.mark({ class: "cm-wrong" }).range(mark.from, mark.to));
+    }
+
+    // While something is wrong, the ghost is withdrawn. It answers "what comes next
+    // if everything so far is right", and once that is not true it has nothing to
+    // say — it would re-offer the rest of the line from inside the mistake, which is
+    // how `function canDrbbb` came out as `function canDrive(usr) {bbbive(usr) {`.
+    //
+    // Deleting is not a mistake and leaves no mark, so the ghost stays for that.
+    const { at, text } = wrong.length > 0 ? { at: 0, text: "" } : ghostFor(buffer, expected);
+
     if (text.length > 0) {
       const line = state.doc.lineAt(at);
 
@@ -219,6 +236,13 @@ const editorTheme = EditorView.theme(
     ".cm-ghost": { color: "var(--ghost)" },
     ".cm-ghost-block": { color: "var(--ghost)", whiteSpace: "pre" },
     ".cm-error-line": { backgroundColor: "var(--error-line)" },
+    // Wins over the syntax highlighting underneath it: a keyword you have misspelt
+    // is no longer a keyword, and colouring it as one hides the thing being flagged.
+    ".cm-wrong, .cm-wrong span": {
+      color: "var(--wrong) !important",
+      backgroundColor: "var(--wrong-bg)",
+      borderRadius: "2px",
+    },
     "&.cm-focused": { outline: "none" },
   },
   { dark: true },
