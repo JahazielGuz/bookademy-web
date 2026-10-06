@@ -105,6 +105,10 @@ export type Lesson = {
   body_markdown: string;
 };
 
+export type ItemLink = { topic_id: number; part: "lesson" | "quiz" };
+
+export type ItemLinks = { previous: ItemLink | null; next: ItemLink | null };
+
 export type TopicDetail = {
   id: number;
   position: number;
@@ -116,6 +120,10 @@ export type TopicDetail = {
   chapter_number: number;
   chapter_title: string;
   document_id: number;
+  lesson_complete: boolean;
+  quiz_passed: boolean;
+  lesson_links: ItemLinks;
+  quiz_links: ItemLinks;
   lesson: Lesson | null;
   quiz: Quiz | null;
   exercises: Exercise[];

@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import GhostEditor from "@/components/GhostEditor";
+import ItemFooter from "@/components/ItemFooter";
 import Markdown from "@/components/Markdown";
 import type { CheckResponse, TopicDetail } from "@/lib/types";
 
@@ -23,6 +24,12 @@ function startingStep(steps: { completed: boolean }[]): number {
   return next === -1 ? steps.length - 1 : next;
 }
 
+/** The first exercise with work left in it, or the last if the lesson is finished. */
+function startingExercise(exercises: { steps: { completed: boolean }[] }[]): number {
+  const next = exercises.findIndex((e) => e.steps.some((step) => !step.completed));
+  return next === -1 ? Math.max(exercises.length - 1, 0) : next;
+}
+
 /**
  * The lesson page: reading on the left, code on the right.
  *
@@ -38,11 +45,13 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
   const exercises = topic.exercises;
   const hasExercise = exercises.length > 0;
 
-  const [exerciseIndex, setExerciseIndex] = useState(0);
+  // Pick up where the learner left off, across exercises as well as within one:
+  // coming back to a lesson whose first exercise is finished should not reopen it.
+  const [exerciseIndex, setExerciseIndex] = useState(() => startingExercise(exercises));
   const exercise = hasExercise ? exercises[exerciseIndex] : null;
 
   const [stepIndex, setStepIndex] = useState(() =>
-    hasExercise ? startingStep(exercises[0].steps) : 0,
+    hasExercise ? startingStep(exercises[startingExercise(exercises)].steps) : 0,
   );
   const [completed, setCompleted] = useState<Set<number>>(
     () => new Set(exercises.flatMap((e) => e.steps.filter((s) => s.completed).map((s) => s.id))),
@@ -52,10 +61,15 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
   const [code, setCode] = useState(step ? step.starter_code : "");
   const [check, setCheck] = useState<CheckState>({ kind: "idle" });
 
-  const isPassed = step !== null && completed.has(step.id);
-  const isLastStep = exercise !== null && stepIndex === exercise.steps.length - 1;
   const hasNextExercise = exerciseIndex < exercises.length - 1;
   const done = exercise ? exercise.steps.filter((s) => completed.has(s.id)).length : 0;
+
+  // The lesson is finished when every checkpoint of every exercise is, which is what
+  // opens the footer's Next. Counted from local state rather than the value the server
+  // sent with the page, so passing the last one opens it then and there.
+  const allSteps = exercises.flatMap((e) => e.steps);
+  const outstanding = allSteps.filter((s) => !completed.has(s.id)).length;
+  const lessonComplete = topic.lesson_complete || outstanding === 0;
 
   async function runCheck() {
     if (step === null) return;
@@ -75,6 +89,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
       if (result.passed) {
         setCompleted((previous) => new Set(previous).add(step.id));
         setCheck({ kind: "passed" });
+        advance();
       } else {
         setCheck({ kind: "failed", line: result.first_mismatch_line });
       }
@@ -83,24 +98,30 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
     }
   }
 
-  function goToStep(index: number) {
+  /** Move to the next checkpoint, or the next exercise once this one is finished.
+   *
+   * Called on a pass rather than offered as a button: each step's starter code is the
+   * previous step's expected code, so the buffer the learner just typed is already the
+   * buffer they continue in. Nothing visibly changes except the ghost text growing —
+   * which is the whole point, and a button to confirm it would only be in the way. */
+  function advance() {
     if (exercise === null) return;
-    setStepIndex(index);
-    setCode(exercise.steps[index].starter_code);
-    setCheck({ kind: "idle" });
-  }
-
-  function goToNextExercise() {
-    const next = exercises[exerciseIndex + 1];
-    const first = startingStep(next.steps);
-    setExerciseIndex(exerciseIndex + 1);
-    setStepIndex(first);
-    setCode(next.steps[first].starter_code);
-    setCheck({ kind: "idle" });
+    if (stepIndex < exercise.steps.length - 1) {
+      setStepIndex(stepIndex + 1);
+      setCode(exercise.steps[stepIndex + 1].starter_code);
+      return;
+    }
+    if (hasNextExercise) {
+      const next = exercises[exerciseIndex + 1];
+      setExerciseIndex(exerciseIndex + 1);
+      setStepIndex(0);
+      setCode(next.steps[0].starter_code);
+    }
   }
 
   return (
-    <div className="flex min-h-0 flex-1">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 flex-1">
       {/* Reading pane. Scrolls on its own; the editor beside it does not move. */}
       <div className="w-1/2 overflow-y-auto border-r border-line">
         <div className="mx-auto max-w-2xl px-8 py-8">
@@ -230,26 +251,6 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                 {check.kind === "checking" ? "Checking…" : "Check"}
               </button>
 
-              {isPassed && !isLastStep ? (
-                <button
-                  type="button"
-                  onClick={() => goToStep(stepIndex + 1)}
-                  className="rounded border border-code-line px-4 py-2 text-sm font-medium text-code-text"
-                >
-                  Next
-                </button>
-              ) : null}
-
-              {isPassed && isLastStep && hasNextExercise ? (
-                <button
-                  type="button"
-                  onClick={goToNextExercise}
-                  className="rounded border border-code-line px-4 py-2 text-sm font-medium text-code-text"
-                >
-                  Next exercise
-                </button>
-              ) : null}
-
               <p className="text-sm" role="status" aria-live="polite">
                 {check.kind === "passed" ? <span className="text-pass">Correct.</span> : null}
                 {check.kind === "failed" ? (
@@ -270,6 +271,18 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
           </div>
         )}
       </div>
+      </div>
+
+      <ItemFooter
+        documentId={topic.document_id}
+        links={topic.lesson_links}
+        complete={lessonComplete}
+        remaining={
+          outstanding === 1
+            ? "One checkpoint left before you can move on"
+            : `${outstanding} checkpoints left before you can move on`
+        }
+      />
     </div>
   );
 }

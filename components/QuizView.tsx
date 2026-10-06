@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import ItemFooter from "@/components/ItemFooter";
 import Markdown from "@/components/Markdown";
 import type { Quiz, QuizAttemptResponse, TopicDetail } from "@/lib/types";
 
@@ -28,6 +29,17 @@ export default function QuizView({ topic, quiz, documentId }: QuizViewProps) {
   const [outcome, setOutcome] = useState<QuizAttemptResponse | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Passed in this sitting, or in an earlier one.
+  const passed = outcome !== null ? outcome.passed : topic.quiz_passed;
+  const footer = (
+    <ItemFooter
+      documentId={documentId}
+      links={topic.quiz_links}
+      complete={passed}
+      remaining="Pass the quiz to move on"
+    />
+  );
 
   const total = quiz.questions.length;
   const question = quiz.questions[index];
@@ -62,7 +74,7 @@ export default function QuizView({ topic, quiz, documentId }: QuizViewProps) {
 
   if (outcome !== null) {
     return (
-      <Shell documentId={documentId} title={topic.title}>
+      <Shell documentId={documentId} title={topic.title} footer={footer}>
         <div className="mx-auto w-full max-w-3xl">
           <h1 className="text-3xl font-semibold">
             {outcome.score} of {outcome.total} correct
@@ -89,11 +101,19 @@ export default function QuizView({ topic, quiz, documentId }: QuizViewProps) {
                     <div className="min-w-0 flex-1">
                       <Markdown>{q.prompt}</Markdown>
                       <p className="mt-3 text-sm text-code-muted">
-                        You chose <em>{q.choices[result.chosen_index]}</em>.
+                        You chose{" "}
+                        <em>
+                          <Markdown inline>{q.choices[result.chosen_index]}</Markdown>
+                        </em>
+                        .
                         {!result.correct ? (
                           <>
                             {" "}
-                            The answer is <em>{q.choices[result.correct_index]}</em>.
+                            The answer is{" "}
+                            <em>
+                              <Markdown inline>{q.choices[result.correct_index]}</Markdown>
+                            </em>
+                            .
                           </>
                         ) : null}
                       </p>
@@ -119,12 +139,6 @@ export default function QuizView({ topic, quiz, documentId }: QuizViewProps) {
             >
               Try again
             </button>
-            <Link
-              href={`/courses/${documentId}`}
-              className="rounded border border-code-line px-5 py-2.5 text-sm font-medium"
-            >
-              Back to syllabus
-            </Link>
           </div>
         </div>
       </Shell>
@@ -132,7 +146,7 @@ export default function QuizView({ topic, quiz, documentId }: QuizViewProps) {
   }
 
   return (
-    <Shell documentId={documentId} title={topic.title}>
+    <Shell documentId={documentId} title={topic.title} footer={footer}>
       <div className="mx-auto w-full max-w-3xl">
         <div className="text-2xl font-semibold leading-snug">
           <Markdown>{question.prompt}</Markdown>
@@ -155,7 +169,7 @@ export default function QuizView({ topic, quiz, documentId }: QuizViewProps) {
                       : "border-code-line hover:bg-code-surface"
                   }`}
               >
-                {choice}
+                <Markdown inline>{choice}</Markdown>
               </button>
             );
           })}
@@ -171,7 +185,7 @@ export default function QuizView({ topic, quiz, documentId }: QuizViewProps) {
           disabled={index === 0}
           className="rounded border border-code-line px-4 py-2 text-sm disabled:opacity-30"
         >
-          Back
+          Previous
         </button>
 
         <div className="flex flex-1 items-center justify-center gap-4 text-sm text-code-muted">
@@ -192,7 +206,7 @@ export default function QuizView({ topic, quiz, documentId }: QuizViewProps) {
           disabled={chosen === undefined || submitting}
           className="rounded bg-accent px-5 py-2 text-sm font-semibold text-on-accent disabled:opacity-30"
         >
-          {isLast ? (submitting ? "Marking…" : "Finish") : "Next"}
+          {isLast ? (submitting ? "Marking…" : "Finish") : "Continue"}
         </button>
       </footer>
     </Shell>
@@ -203,10 +217,12 @@ type ShellProps = {
   documentId: string;
   title: string;
   children: React.ReactNode;
+  /** The syllabus bar, below the scrolling content and outside it. */
+  footer: React.ReactNode;
 };
 
 /** The quiz owns the whole page, and takes the dark surface to say so. */
-function Shell({ documentId, title, children }: ShellProps) {
+function Shell({ documentId, title, children, footer }: ShellProps) {
   return (
     <main className="flex h-screen flex-col overflow-hidden bg-code-bg text-code-text">
       <header className="flex shrink-0 items-center gap-4 bg-header px-6 py-3 text-header-text">
@@ -216,7 +232,10 @@ function Shell({ documentId, title, children }: ShellProps) {
         <span className="text-code-line">/</span>
         <span className="truncate text-sm font-medium">{title}</span>
       </header>
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-8 py-14">{children}</div>
+      <div className="prose-on-dark flex min-h-0 flex-1 flex-col overflow-y-auto px-8 py-14">
+        {children}
+      </div>
+      {footer}
     </main>
   );
 }

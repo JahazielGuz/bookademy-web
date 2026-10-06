@@ -14,8 +14,11 @@
   --surface: #f6f7f9;
   --surface-2: #eceef2;
   --line: #d8dce3;
-  --text: #15171c;
-  --muted: #5a626f;
+  --text: #0f1117;
+  /* Secondary text, not faint text. The earlier value passed contrast checks and
+   * still read as greyed-out on a white page, which made summaries and explanations
+   * look like disabled controls rather than prose. */
+  --muted: #39404e;
 
   --accent: #f5c518;
   --on-accent: #1a1a1a;
@@ -28,7 +31,7 @@
   --code-surface: #232a42;
   --code-line: #343d5c;
   --code-text: #e7eaf4;
-  --code-muted: #8b94b0;
+  --code-muted: #aab3cd;
   /* Grey enough to read as a prompt, light enough to copy from on a dark ground. */
   --ghost: #6e7899;
   --error-line: rgba(240, 120, 124, 0.18);
@@ -36,7 +39,7 @@
   /* The header, dark enough to frame a light page and a dark editor equally. */
   --header: #11162a;
   --header-text: #e8ecf7;
-  --header-muted: #8b94b0;
+  --header-muted: #a8b1cb;
 
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
@@ -110,6 +113,16 @@ body {
 .prose-bk a {
   color: #1766c0;
   text-decoration: underline;
+}
+
+/* The same prose on a dark ground — the quiz page. Inline code keeps a light pill
+   everywhere else, and on dark that pill was white text on white. */
+.prose-on-dark .prose-bk code {
+  background: var(--code-surface);
+  color: var(--code-text);
+}
+.prose-on-dark .prose-bk a {
+  color: #6cb3ff;
 }
 
 /* VS Code Dark+ for the fenced blocks in a lesson.
