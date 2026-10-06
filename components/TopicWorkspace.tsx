@@ -137,58 +137,60 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                 <Markdown>{exercise.scenario_markdown}</Markdown>
               </div>
 
-              <ol className="mt-6 space-y-1">
-                {exercise.steps.map((candidate, index) => {
+              <h3 className="mt-8 border-b border-line pb-2 text-sm font-semibold">
+                Instructions
+              </h3>
+
+              {/* Every instruction, in full, stacked. Not a list of labels with the
+                  current one shown somewhere else: the text of step 3 is what tells
+                  you whether step 2 made sense, and hiding it behind a click makes
+                  the exercise harder to follow than the book it came from. */}
+              <ol className="mt-5 space-y-8">
+                {exercise.steps.map((candidate) => {
                   const passed = completed.has(candidate.id);
-                  const reachable =
-                    index === 0 || completed.has(exercise.steps[index - 1].id);
+                  const active = candidate.id === step.id;
                   return (
-                    <li key={candidate.id}>
-                      <button
-                        type="button"
-                        disabled={!reachable}
-                        onClick={() => goToStep(index)}
-                        className={`flex w-full items-center gap-3 rounded px-3 py-2 text-left text-sm transition
-                          ${index === stepIndex ? "bg-surface-2" : "hover:bg-surface-2"}
-                          ${reachable ? "" : "cursor-not-allowed opacity-40"}`}
+                    <li key={candidate.id} className="flex gap-3">
+                      <span
+                        aria-hidden
+                        className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded border text-[11px] font-bold
+                          ${
+                            passed
+                              ? "border-accent bg-accent text-on-accent"
+                              : active
+                                ? "border-accent text-transparent"
+                                : "border-line text-transparent"
+                          }`}
                       >
-                        <span
-                          aria-hidden
-                          className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border text-[11px]
-                            ${passed ? "border-pass bg-pass text-white" : "border-line text-muted"}`}
-                        >
-                          {passed ? "✓" : candidate.number}
-                        </span>
-                        <span className={passed ? "text-muted line-through" : ""}>
-                          Checkpoint {candidate.number}
-                        </span>
-                      </button>
+                        ✓
+                      </span>
+
+                      <div className={`min-w-0 flex-1 ${passed ? "opacity-60" : ""}`}>
+                        <div className="flex gap-2">
+                          <span className="font-semibold">{candidate.number}.</span>
+                          <div className="min-w-0 flex-1">
+                            <Markdown>{candidate.instruction_markdown}</Markdown>
+                            <div className="mt-2 text-sm text-muted">
+                              <Markdown>{candidate.explanation_markdown}</Markdown>
+                            </div>
+                            {candidate.hint.length > 0 && active ? (
+                              <details className="mt-2 text-sm">
+                                <summary className="cursor-pointer text-muted">Hint</summary>
+                                <div className="pt-2">
+                                  <Markdown>{candidate.hint}</Markdown>
+                                </div>
+                              </details>
+                            ) : null}
+                          </div>
+                        </div>
+                      </div>
                     </li>
                   );
                 })}
               </ol>
-
-              <div className="mt-6 space-y-3 border-t border-line pt-5">
-                <h3 className="text-sm font-semibold">
-                  {done === exercise.steps.length
-                    ? "Exercise complete"
-                    : `Checkpoint ${step.number}`}
-                </h3>
-                <Markdown>{step.instruction_markdown}</Markdown>
-                <div className="rounded border border-line bg-surface-2 p-3 text-sm">
-                  <Markdown>{step.explanation_markdown}</Markdown>
-                </div>
-                {step.hint.length > 0 ? (
-                  <details className="text-sm">
-                    <summary className="cursor-pointer text-muted">Hint</summary>
-                    <div className="pt-2">
-                      <Markdown>{step.hint}</Markdown>
-                    </div>
-                  </details>
-                ) : null}
-              </div>
             </section>
           ) : null}
+
 
         </div>
       </div>
