@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import GenerationProgress from "@/components/GenerationProgress";
+import KindMark from "@/components/KindMark";
 import type {
   Chapter,
   DocumentSummary,
@@ -149,7 +150,8 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
             const state = topicState(topic);
             const ready = topic.status === "ready";
             const inner = (
-              <div className="flex items-center gap-3 rounded-lg border border-line bg-surface px-4 py-3">
+              <div className="flex items-center gap-4 rounded-lg border border-line bg-surface px-4 py-3">
+                <KindMark kind={topic.kind} />
                 <span
                   aria-hidden
                   className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border text-[11px]
