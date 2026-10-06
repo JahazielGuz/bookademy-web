@@ -33,6 +33,11 @@
   --ghost: #6e7899;
   --error-line: rgba(240, 120, 124, 0.18);
 
+  /* The header, dark enough to frame a light page and a dark editor equally. */
+  --header: #11162a;
+  --header-text: #e8ecf7;
+  --header-muted: #8b94b0;
+
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
@@ -53,6 +58,9 @@
   --color-code-line: var(--code-line);
   --color-code-text: var(--code-text);
   --color-code-muted: var(--code-muted);
+  --color-header: var(--header);
+  --color-header-text: var(--header-text);
+  --color-header-muted: var(--header-muted);
 }
 
 body {
@@ -102,4 +110,68 @@ body {
 .prose-bk a {
   color: #1766c0;
   text-decoration: underline;
+}
+
+/* VS Code Dark+ for the fenced blocks in a lesson.
+ *
+ * rehype-highlight adds hljs classes and nothing was styling them, so every listing
+ * in every lesson rendered as one flat colour. These are the same values the editor
+ * uses, so a block you read and a block you type into look like the same language. */
+.prose-bk .hljs-comment,
+.prose-bk .hljs-quote {
+  color: #6a9955;
+  font-style: italic;
+}
+.prose-bk .hljs-keyword,
+.prose-bk .hljs-selector-tag,
+.prose-bk .hljs-literal,
+.prose-bk .hljs-type,
+.prose-bk .hljs-built_in {
+  color: #569cd6;
+}
+.prose-bk .hljs-section,
+.prose-bk .hljs-name {
+  color: #c586c0;
+}
+.prose-bk .hljs-string,
+.prose-bk .hljs-regexp,
+.prose-bk .hljs-addition,
+.prose-bk .hljs-attribute,
+.prose-bk .hljs-meta .hljs-string {
+  color: #ce9178;
+}
+.prose-bk .hljs-number,
+.prose-bk .hljs-symbol,
+.prose-bk .hljs-bullet {
+  color: #b5cea8;
+}
+.prose-bk .hljs-title,
+.prose-bk .hljs-title.function_,
+.prose-bk .hljs-function .hljs-title {
+  color: #dcdcaa;
+}
+.prose-bk .hljs-variable,
+.prose-bk .hljs-attr,
+.prose-bk .hljs-template-variable,
+.prose-bk .hljs-property {
+  color: #9cdcfe;
+}
+.prose-bk .hljs-class .hljs-title,
+.prose-bk .hljs-title.class_,
+.prose-bk .hljs-params {
+  color: #4ec9b0;
+}
+.prose-bk .hljs-doctag,
+.prose-bk .hljs-meta,
+.prose-bk .hljs-meta .hljs-keyword {
+  color: #9cdcfe;
+}
+.prose-bk .hljs-deletion {
+  color: #f08a8d;
+}
+.prose-bk .hljs-emphasis {
+  font-style: italic;
+}
+.prose-bk .hljs-strong {
+  font-weight: 700;
 }

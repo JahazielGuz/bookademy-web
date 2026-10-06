@@ -31,8 +31,8 @@ export default async function TopicPage({ params }: TopicPageProps) {
   // its own, and the editor only when its code is taller than the pane.
   return (
     <main className="flex h-screen flex-col overflow-hidden">
-      <header className="flex shrink-0 items-center gap-4 border-b border-line px-6 py-3">
-        <Link href={`/courses/${documentId}`} className="text-sm text-muted hover:text-text">
+      <header className="flex shrink-0 items-center gap-4 bg-header px-6 py-3 text-header-text">
+        <Link href={`/courses/${documentId}`} className="text-sm text-header-muted hover:text-header-text">
           ← Syllabus
         </Link>
         <span className="truncate text-sm font-medium">{topic.title}</span>

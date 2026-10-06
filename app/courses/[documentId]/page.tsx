@@ -1,5 +1,5 @@
-import Link from "next/link";
 
+import AppHeader from "@/components/AppHeader";
 import CourseView from "@/components/CourseView";
 import { optionalJson, requireJson } from "@/lib/api";
 import type { DocumentSummary, Syllabus } from "@/lib/types";
@@ -17,15 +17,15 @@ export default async function SyllabusPage({ params }: SyllabusPageProps) {
   ]);
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12">
-      <Link href="/library" className="text-sm text-muted underline">
-        ← Library
-      </Link>
+    <main>
+      <AppHeader backHref="/library" backLabel="Library" />
+      <div className="mx-auto max-w-3xl px-6 py-10">
       <CourseView
         documentId={Number(documentId)}
         initialDocument={document}
         initialSyllabus={syllabus}
       />
+      </div>
     </main>
   );
 }
