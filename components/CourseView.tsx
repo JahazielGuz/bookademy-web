@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import GenerationProgress from "@/components/GenerationProgress";
-import KindMark from "@/components/KindMark";
+import TopicAccordion from "@/components/TopicAccordion";
 import type {
   Chapter,
   DocumentSummary,
@@ -20,16 +20,6 @@ export type CourseViewProps = {
 };
 
 const FINISHED: GenerationEvent["kind"][] = ["done"];
-
-function topicState(topic: TopicSummary): { label: string; tone: string } {
-  if (topic.status === "failed") return { label: "failed", tone: "text-fail" };
-  if (topic.status !== "ready") return { label: "being written", tone: "text-muted" };
-  if (topic.complete) return { label: "complete", tone: "text-pass" };
-  if (topic.steps_completed > 0 || topic.quiz_passed) {
-    return { label: `${topic.steps_completed}/${topic.steps_total} checkpoints`, tone: "text-muted" };
-  }
-  return { label: "not started", tone: "text-muted" };
-}
 
 export default function CourseView({
   documentId,
@@ -121,16 +111,18 @@ type ChapterBlockProps = {
 
 function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
   const writing = chapter.status === "generating";
+  const done = chapter.topics.filter((topic) => topic.complete).length;
 
   return (
-    <li className={`space-y-3 ${chapter.status === "pending" ? "opacity-45" : ""}`}>
-      <div className="flex items-baseline justify-between gap-4">
+    <li className={`${chapter.status === "pending" ? "opacity-45" : ""}`}>
+      <div className="mb-3 flex items-baseline justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold">
             {chapter.number}. {chapter.title}
           </h2>
           <p className="text-sm text-muted">
-            {chapter.summary} · pages {chapter.page_start}–{chapter.page_end}
+            {chapter.topics.length} topics · pages {chapter.page_start}–{chapter.page_end}
+            {done > 0 ? ` · ${done} complete` : ""}
           </p>
         </div>
         <span className="shrink-0 text-xs text-muted">
@@ -145,43 +137,10 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
       </div>
 
       {chapter.status === "pending" ? null : (
-        <ul className="space-y-2">
-          {chapter.topics.map((topic) => {
-            const state = topicState(topic);
-            const ready = topic.status === "ready";
-            const inner = (
-              <div className="flex items-center gap-4 rounded-lg border border-line bg-surface px-4 py-3">
-                <KindMark kind={topic.kind} />
-                <span
-                  aria-hidden
-                  className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border text-[11px]
-                    ${topic.complete ? "border-pass bg-pass text-white" : "border-line text-muted"}`}
-                >
-                  {topic.complete ? "✓" : ""}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{topic.title}</p>
-                  <p className="truncate text-sm text-muted">{topic.summary}</p>
-                </div>
-                <span className={`shrink-0 text-xs ${state.tone}`}>{state.label}</span>
-              </div>
-            );
-
-            return (
-              <li key={topic.id}>
-                {ready ? (
-                  <Link
-                    href={`/courses/${documentId}/topics/${topic.id}`}
-                    className="block hover:opacity-90"
-                  >
-                    {inner}
-                  </Link>
-                ) : (
-                  <div className="opacity-60">{inner}</div>
-                )}
-              </li>
-            );
-          })}
+        <ul className="overflow-hidden rounded-lg border border-line bg-bg">
+          {chapter.topics.map((topic) => (
+            <TopicAccordion key={topic.id} topic={topic} documentId={documentId} />
+          ))}
         </ul>
       )}
     </li>

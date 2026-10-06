@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import QuizView from "@/components/QuizView";
 import TopicWorkspace from "@/components/TopicWorkspace";
 import { requireJson } from "@/lib/api";
 import type { TopicDetail } from "@/lib/types";
@@ -26,24 +25,6 @@ export default async function TopicPage({ params }: TopicPageProps) {
         </p>
       </main>
     );
-  }
-
-  // A quiz is its own kind of page: questions one at a time, full width, no editor.
-  // A lesson is the split, because its exercises need the editor beside the reading.
-  if (topic.kind === "quiz") {
-    if (topic.quiz === null || topic.quiz.questions.length === 0) {
-      return (
-        <main className="mx-auto max-w-2xl px-6 py-16">
-          <Link href={`/courses/${documentId}`} className="text-sm text-muted underline">
-            ← Syllabus
-          </Link>
-          <p className="mt-8 rounded-lg border border-line bg-surface p-6 text-muted">
-            This quiz has no questions.
-          </p>
-        </main>
-      );
-    }
-    return <QuizView topic={topic} quiz={topic.quiz} documentId={documentId} />;
   }
 
   // Fixed to the viewport so the two panes scroll independently: the reading side on
