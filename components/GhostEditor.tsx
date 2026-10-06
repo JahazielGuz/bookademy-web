@@ -116,20 +116,40 @@ function buildDecorations(state: EditorState): DecorationSet {
   if (expected.length > 0) {
     const { at, text } = ghostFor(state.doc.toString(), expected);
     if (text.length > 0) {
-      const [firstLine, ...restLines] = text.split("\n");
-      if (firstLine.length > 0) {
-        ranges.push(
-          Decoration.widget({ widget: new InlineGhost(firstLine), side: 1 }).range(at),
-        );
-      }
-      if (restLines.length > 0) {
+      const line = state.doc.lineAt(at);
+
+      // Whole lines going in above code that is already there — the usual shape of a
+      // checkpoint that adds a body inside a block you have already closed. The
+      // insertion starts at a line boundary and ends with a newline, so none of it
+      // shares a line with anything typed, and all of it belongs above that line.
+      //
+      // Splitting it the other way is what produced `if (usr.age >= 16) {}`: the
+      // ghost's first line was drawn inline, which pushed the brace on that line to
+      // the end of it, and the remaining ghost lines went underneath both.
+      if (at === line.from && text.endsWith("\n")) {
         ranges.push(
           Decoration.widget({
-            widget: new BlockGhost(restLines),
-            side: 1,
+            widget: new BlockGhost(text.slice(0, -1).split("\n")),
+            side: -1,
             block: true,
-          }).range(state.doc.lineAt(at).to),
+          }).range(line.from),
         );
+      } else {
+        const [firstLine, ...restLines] = text.split("\n");
+        if (firstLine.length > 0) {
+          ranges.push(
+            Decoration.widget({ widget: new InlineGhost(firstLine), side: 1 }).range(at),
+          );
+        }
+        if (restLines.length > 0) {
+          ranges.push(
+            Decoration.widget({
+              widget: new BlockGhost(restLines),
+              side: 1,
+              block: true,
+            }).range(line.to),
+          );
+        }
       }
     }
   }
