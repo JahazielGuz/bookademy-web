@@ -72,13 +72,31 @@ body {
   color: var(--text);
 }
 
+/* Tailwind's preflight sets -webkit-font-smoothing: antialiased, which on macOS
+ * thins every stem. Against a reference rendered with the default smoothing, black
+ * text came out reading as dark grey no matter what the colour said — the ink was
+ * simply not there. Subpixel rendering puts it back.
+ *
+ * The weight is nudged off 400 for the same reason: SF, the system face here, is a
+ * light, high-contrast design at body sizes next to the grotesque the reference
+ * uses, and 450 closes most of the difference in stem width without reading as bold. */
+html,
+body {
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+.prose-bk :is(p, li, td, th) {
+  font-weight: 450;
+}
+
 .prose-bk :is(h1, h2, h3) {
   font-weight: 600;
   margin: 1rem 0 0.5rem;
 }
 .prose-bk p {
   margin: 0.5rem 0;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 .prose-bk ul,
 .prose-bk ol {

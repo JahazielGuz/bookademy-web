@@ -129,10 +129,10 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
             Chapter {topic.chapter_number} · {topic.chapter_title}
           </p>
           <h1 className="mt-2 text-3xl font-semibold">{topic.title}</h1>
-          <p className="mt-2 text-muted">{topic.summary}</p>
+          <p className="mt-2 text-[17px] text-muted">{topic.summary}</p>
 
           {topic.lesson !== null ? (
-            <section className="mt-8">
+            <section className="mt-8 text-[17px]">
               <Markdown>{topic.lesson.body_markdown}</Markdown>
             </section>
           ) : null}
@@ -140,7 +140,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
           {topic.key_points.length > 0 ? (
             <div className="mt-8 rounded-lg border border-line bg-surface p-4">
               <h3 className="mb-2 text-sm font-semibold">You should come away knowing</h3>
-              <ul className="list-disc space-y-1 pl-5 text-sm text-muted">
+              <ul className="list-disc space-y-1 pl-5 text-[15px] text-muted">
                 {topic.key_points.map((point) => (
                   <li key={point}>{point}</li>
                 ))}
@@ -154,7 +154,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                 Exercise {exercise.position} of {exercises.length}
               </p>
               <h2 className="mt-2 text-xl font-semibold">{exercise.title}</h2>
-              <div className="mt-2">
+              <div className="mt-2 text-[17px]">
                 <Markdown>{exercise.scenario_markdown}</Markdown>
               </div>
 
@@ -190,10 +190,10 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                           readable as the rest — the tick is what marks it done. */}
                       <div className="min-w-0 flex-1">
                         <div className="flex gap-2">
-                          <span className="font-semibold">{candidate.number}.</span>
-                          <div className="min-w-0 flex-1">
+                          <span className="text-[17px] font-bold">{candidate.number}.</span>
+                          <div className="min-w-0 flex-1 text-[17px]">
                             <Markdown>{candidate.instruction_markdown}</Markdown>
-                            <div className="mt-2 text-sm text-muted">
+                            <div className="mt-2 text-[15px] text-muted">
                               <Markdown>{candidate.explanation_markdown}</Markdown>
                             </div>
                             {candidate.hint.length > 0 && active ? (
