@@ -213,6 +213,7 @@ function Shell({ documentId, title, children }: ShellProps) {
         <Link href={`/courses/${documentId}`} className="text-sm text-code-muted hover:text-code-text">
           ← Syllabus
         </Link>
+        <span className="text-code-line">/</span>
         <span className="truncate text-sm font-medium">{title}</span>
       </header>
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-8 py-14">{children}</div>
