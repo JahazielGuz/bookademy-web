@@ -3,7 +3,8 @@
 import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
-import { indentUnit } from "@codemirror/language";
+import { HighlightStyle, indentUnit, syntaxHighlighting } from "@codemirror/language";
+import { tags } from "@lezer/highlight";
 import { Compartment, EditorState, StateEffect, StateField } from "@codemirror/state";
 import {
   Decoration,
@@ -145,6 +146,32 @@ const decorationField = StateField.define<DecorationSet>({
   provide: (field) => EditorView.decorations.from(field),
 });
 
+/* VS Code's Dark+ colours.
+ *
+ * Without a highlight style CodeMirror parses the language and then renders every
+ * token the same colour — which is what it was doing. Parsing without highlighting
+ * is the worst of both: the cost of a grammar and none of the benefit.
+ *
+ * The ghost text sits at #6f7a8d, duller than any of these, so what you have yet to
+ * type still reads as unwritten rather than as another kind of token. */
+const vsCodeDark = HighlightStyle.define([
+  { tag: tags.comment, color: "#6a9955", fontStyle: "italic" },
+  { tag: [tags.keyword, tags.modifier, tags.self, tags.null, tags.bool], color: "#569cd6" },
+  { tag: [tags.controlKeyword, tags.moduleKeyword], color: "#c586c0" },
+  { tag: [tags.string, tags.special(tags.string)], color: "#ce9178" },
+  { tag: tags.escape, color: "#d7ba7d" },
+  { tag: tags.regexp, color: "#d16969" },
+  { tag: [tags.number, tags.integer, tags.float], color: "#b5cea8" },
+  { tag: [tags.typeName, tags.className, tags.namespace], color: "#4ec9b0" },
+  { tag: [tags.function(tags.variableName), tags.function(tags.propertyName)], color: "#dcdcaa" },
+  { tag: [tags.variableName, tags.propertyName, tags.attributeName], color: "#9cdcfe" },
+  { tag: tags.definition(tags.variableName), color: "#9cdcfe" },
+  { tag: [tags.operator, tags.punctuation, tags.separator, tags.bracket], color: "#d4d4d4" },
+  { tag: tags.atom, color: "#569cd6" },
+  { tag: tags.meta, color: "#9cdcfe" },
+  { tag: tags.invalid, color: "#f08a8d" },
+]);
+
 // The editor is the one dark surface on a light page, so it takes the code palette
 // rather than inheriting the page's.
 const editorTheme = EditorView.theme(
@@ -211,6 +238,7 @@ export default function GhostEditor({
           history(),
           keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
           languageCompartment.current.of(languageSupport(language)),
+          syntaxHighlighting(vsCodeDark),
           readOnlyCompartment.current.of(EditorState.readOnly.of(readOnly)),
           indentUnit.of(language === "python" ? "    " : "  "),
           expectedField,

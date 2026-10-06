@@ -209,8 +209,8 @@ type ShellProps = {
 function Shell({ documentId, title, children }: ShellProps) {
   return (
     <main className="flex h-screen flex-col overflow-hidden bg-code-bg text-code-text">
-      <header className="flex shrink-0 items-center gap-4 border-b border-code-line px-6 py-3">
-        <Link href={`/courses/${documentId}`} className="text-sm text-code-muted hover:text-code-text">
+      <header className="flex shrink-0 items-center gap-4 bg-header px-6 py-3 text-header-text">
+        <Link href={`/courses/${documentId}`} className="text-sm text-header-muted hover:text-header-text">
           ← Syllabus
         </Link>
         <span className="text-code-line">/</span>
