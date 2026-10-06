@@ -186,7 +186,9 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                         ✓
                       </span>
 
-                      <div className={`min-w-0 flex-1 ${passed ? "opacity-60" : ""}`}>
+                      {/* A finished instruction is not a faded one. It stays as
+                          readable as the rest — the tick is what marks it done. */}
+                      <div className="min-w-0 flex-1">
                         <div className="flex gap-2">
                           <span className="font-semibold">{candidate.number}.</span>
                           <div className="min-w-0 flex-1">
