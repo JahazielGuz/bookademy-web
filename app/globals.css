@@ -35,6 +35,10 @@
   --code-muted: #aab3cd;
   /* Grey enough to read as a prompt, light enough to copy from on a dark ground. */
   --ghost: #6e7899;
+  /* Typed characters the target does not have. Bright enough to find on the dark
+   * editor, and backed by a wash so a single wrong character is still visible. */
+  --wrong: #ff7b72;
+  --wrong-bg: rgba(255, 123, 114, 0.14);
   --error-line: rgba(240, 120, 124, 0.18);
 
   /* The header, dark enough to frame a light page and a dark editor equally. */
