@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import GhostEditor from "@/components/GhostEditor";
 import Markdown from "@/components/Markdown";
-import QuizPanel from "@/components/QuizPanel";
 import type { CheckResponse, TopicDetail } from "@/lib/types";
 
 export type TopicWorkspaceProps = {
@@ -191,12 +190,6 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
             </section>
           ) : null}
 
-          {topic.quiz !== null && topic.quiz.questions.length > 0 ? (
-            <section className="mt-12 border-t border-line pt-8 pb-12">
-              <h2 className="mb-6 text-xl font-semibold">Check your understanding</h2>
-              <QuizPanel quiz={topic.quiz} />
-            </section>
-          ) : null}
         </div>
       </div>
 

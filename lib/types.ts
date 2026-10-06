@@ -12,6 +12,9 @@ export type DocumentStatus =
 
 export type TopicStatus = "pending" | "generating" | "ready" | "failed";
 
+/** A topic is one kind of thing: reading with exercises, or questions. */
+export type TopicKind = "lesson" | "quiz";
+
 export type DocumentSummary = {
   id: number;
   title: string;
@@ -32,6 +35,7 @@ export type DocumentSummary = {
 export type TopicSummary = {
   id: number;
   position: number;
+  kind: TopicKind;
   title: string;
   summary: string;
   status: TopicStatus;
@@ -108,6 +112,7 @@ export type Lesson = {
 export type TopicDetail = {
   id: number;
   position: number;
+  kind: TopicKind;
   title: string;
   summary: string;
   key_points: string[];
