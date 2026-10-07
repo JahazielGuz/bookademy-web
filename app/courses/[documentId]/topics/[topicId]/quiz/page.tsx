@@ -23,7 +23,7 @@ export default async function TopicQuizPage({ params }: TopicQuizPageProps) {
         <Link href={`/courses/${documentId}`} className="text-sm text-muted underline">
           ← Syllabus
         </Link>
-        <p className="mt-8 rounded-lg border border-line bg-surface p-6 text-muted">
+        <p className="mt-8 rounded-lg border border-line bg-card p-6 text-muted">
           This topic has no quiz yet.
         </p>
       </main>

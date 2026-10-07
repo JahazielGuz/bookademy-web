@@ -81,6 +81,39 @@ export function firstTopic(syllabus: Syllabus): ResumeTarget | null {
   return null;
 }
 
+export type InProgress = {
+  chapter: Chapter;
+  topic: TopicSummary;
+  progress: Progress;
+};
+
+/**
+ * The furthest topic a learner has started but not finished.
+ *
+ * The last one in syllabus order rather than the first, because it is where they
+ * actually were. Going back to the first unfinished topic is a decision they can
+ * make from the list; picking up is not.
+ */
+export function latestInProgress(syllabus: Syllabus): InProgress | null {
+  let found: InProgress | null = null;
+  for (const chapter of syllabus.chapters) {
+    for (const topic of workable(chapter.topics)) {
+      const progress = topicProgress(topic);
+      if (progress.done > 0 && progress.done < progress.total) {
+        found = { chapter, topic, progress };
+      }
+    }
+  }
+  return found;
+}
+
+/** Where an in-progress topic continues: its lesson if there are checkpoints left,
+ *  otherwise its quiz. */
+export function continueAt(topic: TopicSummary): ResumeTarget {
+  const unfinishedLesson = topic.steps_total > 0 && topic.steps_completed < topic.steps_total;
+  return { topicId: topic.id, part: unfinishedLesson ? "lesson" : "quiz" };
+}
+
 export function href(documentId: number, target: ResumeTarget): string {
   const base = `/courses/${documentId}/topics/${target.topicId}`;
   return target.part === "quiz" ? `${base}/quiz` : base;

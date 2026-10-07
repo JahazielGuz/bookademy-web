@@ -123,7 +123,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex min-h-0 flex-1">
       {/* Reading pane. Scrolls on its own; the editor beside it does not move. */}
-      <div className="w-1/2 overflow-y-auto border-r border-line">
+      <div className="w-1/2 overflow-y-auto border-r border-line bg-card">
         <div className="mx-auto max-w-2xl px-8 py-8">
           <p className="text-xs uppercase tracking-wide text-muted">
             Chapter {topic.chapter_number} · {topic.chapter_title}
@@ -138,7 +138,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
           ) : null}
 
           {topic.key_points.length > 0 ? (
-            <div className="mt-8 rounded-lg border border-line bg-surface p-4">
+            <div className="mt-8 rounded-lg border border-line bg-surface-2/60 p-4">
               <h3 className="mb-2 text-sm font-semibold">You should come away knowing</h3>
               <ul className="list-disc space-y-1 pl-5 text-[15px] text-muted">
                 {topic.key_points.map((point) => (

@@ -19,7 +19,7 @@ export default function GenerationProgress({
 
   if (latest === undefined) {
     return (
-      <div className="rounded-lg border border-line bg-surface p-5">
+      <div className="rounded-lg border border-line bg-card p-5">
         <p className="text-sm text-muted">
           {connected ? "Waiting for the run to start…" : "Connecting…"}
         </p>
@@ -28,7 +28,7 @@ export default function GenerationProgress({
   }
 
   return (
-    <div className="rounded-lg border border-line bg-surface p-5">
+    <div className="rounded-lg border border-line bg-card p-5">
       <div className="flex items-start gap-3">
         {!finished ? (
           <span

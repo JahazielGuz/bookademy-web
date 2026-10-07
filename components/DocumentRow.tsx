@@ -38,7 +38,7 @@ export default function DocumentRow({ document }: DocumentRowProps) {
   const openable = document.chapters_ready > 0 || document.status === "ready";
 
   return (
-    <div className="flex items-center gap-4 rounded-lg border border-line bg-surface px-5 py-4">
+    <div className="flex items-center gap-4 rounded-lg border border-line bg-card px-5 py-4">
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium">{document.title}</p>
         <p className="text-sm text-muted">
@@ -63,7 +63,7 @@ export default function DocumentRow({ document }: DocumentRowProps) {
       {openable ? (
         <Link
           href={`/courses/${document.id}`}
-          className="shrink-0 rounded bg-accent px-4 py-2 text-sm font-medium text-on-accent"
+          className="shrink-0 rounded bg-brand px-4 py-2 text-sm font-medium text-on-brand"
         >
           {working ? "Start learning →" : "Open course →"}
         </Link>

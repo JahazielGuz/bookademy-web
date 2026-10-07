@@ -1,10 +1,13 @@
 import Link from "next/link";
 
+import ContinueCard from "@/components/ContinueCard";
+
 import {
   courseProgress,
   courseStats,
   firstTopic,
   href,
+  latestInProgress,
   percent,
   resumeTarget,
 } from "@/lib/courseProgress";
@@ -31,6 +34,7 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
   const started = progress.done > 0;
   const finished = resumeTarget(syllabus) === null && progress.total > 0;
   const stats = courseStats(syllabus);
+  const current = latestInProgress(syllabus);
 
   return (
     <header className="mt-8 mb-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -41,7 +45,7 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
           <div className="mt-7">
             <Link
               href={href(documentId, next)}
-              className="inline-block rounded bg-accent px-7 py-3 font-bold text-on-accent"
+              className="inline-block rounded bg-brand px-7 py-3 font-bold text-on-brand hover:opacity-90"
             >
               {finished ? "Review course" : started ? "Resume course" : "Start learning"}
             </Link>
@@ -66,6 +70,10 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
               </span>
               <span className="w-12 shrink-0 text-sm font-bold tabular-nums">{done}%</span>
             </div>
+
+            {current !== null ? (
+              <ContinueCard documentId={documentId} current={current} />
+            ) : null}
           </section>
         ) : null}
       </div>

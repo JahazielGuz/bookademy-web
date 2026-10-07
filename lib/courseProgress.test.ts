@@ -1,9 +1,11 @@
 import {
   chapterProgress,
+  continueAt,
   courseProgress,
   courseStats,
   firstTopic,
   href,
+  latestInProgress,
   percent,
   resumeTarget,
   topicProgress,
@@ -181,5 +183,62 @@ describe("courseProgress", () => {
 
     expect(courseProgress(course)).toEqual({ done: 6, total: 10 });
     expect(percent(courseProgress(course))).toBe(60);
+  });
+});
+
+describe("latestInProgress", () => {
+  const started = { steps_total: 4, steps_completed: 2 };
+  const finished = { steps_total: 4, steps_completed: 4, quiz_passed: true };
+
+  it("is the furthest one started, not the first", () => {
+    const course = syllabus([
+      chapter([topic({ id: 1, ...started }), topic({ id: 2, ...started })]),
+      chapter([topic({ id: 3, ...started })], { id: 2, number: 2 }),
+    ]);
+
+    // Where they actually were. Going back to the first unfinished topic is a
+    // decision they can make from the list; picking up is not.
+    expect(latestInProgress(course)?.topic.id).toBe(3);
+    expect(latestInProgress(course)?.chapter.number).toBe(2);
+  });
+
+  it("ignores topics that are finished", () => {
+    const course = syllabus([
+      chapter([topic({ id: 1, ...started }), topic({ id: 2, ...finished })]),
+    ]);
+
+    expect(latestInProgress(course)?.topic.id).toBe(1);
+  });
+
+  it("is null when nothing has been started", () => {
+    expect(latestInProgress(syllabus([chapter([topic()])]))).toBeNull();
+  });
+
+  it("is null when everything is finished", () => {
+    expect(latestInProgress(syllabus([chapter([topic(finished)])]))).toBeNull();
+  });
+
+  it("ignores a topic that is still being written", () => {
+    const course = syllabus([
+      chapter([topic({ id: 1, ...started }), topic({ id: 2, status: "pending", ...started })]),
+    ]);
+
+    expect(latestInProgress(course)?.topic.id).toBe(1);
+  });
+});
+
+describe("continueAt", () => {
+  it("goes back to the lesson while checkpoints are left", () => {
+    expect(continueAt(topic({ id: 4, steps_total: 4, steps_completed: 2 }))).toEqual({
+      topicId: 4,
+      part: "lesson",
+    });
+  });
+
+  it("goes to the quiz once they are all done", () => {
+    expect(continueAt(topic({ id: 4, steps_total: 4, steps_completed: 4 }))).toEqual({
+      topicId: 4,
+      part: "quiz",
+    });
   });
 });

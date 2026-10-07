@@ -49,7 +49,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             type="text"
             value={displayName}
             onChange={(event) => setDisplayName(event.target.value)}
-            className="w-full rounded border border-line bg-surface px-3 py-2"
+            className="w-full rounded border border-line bg-card px-3 py-2"
           />
         </label>
       ) : null}
@@ -62,7 +62,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
           autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="w-full rounded border border-line bg-surface px-3 py-2"
+          className="w-full rounded border border-line bg-card px-3 py-2"
         />
       </label>
 
@@ -74,7 +74,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
           autoComplete={mode === "register" ? "new-password" : "current-password"}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="w-full rounded border border-line bg-surface px-3 py-2"
+          className="w-full rounded border border-line bg-card px-3 py-2"
         />
       </label>
 
@@ -83,7 +83,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       <button
         type="submit"
         disabled={busy}
-        className="w-full rounded bg-accent px-4 py-2 font-medium text-on-accent disabled:opacity-50"
+        className="w-full rounded bg-brand px-4 py-2 font-medium text-on-brand disabled:opacity-50"
       >
         {mode === "register" ? "Create account" : "Sign in"}
       </button>
