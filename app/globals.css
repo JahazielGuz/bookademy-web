@@ -10,9 +10,12 @@
  * The accent is the reference's yellow, which only works with dark text on it — hence
  * --on-accent rather than assuming white. */
 :root {
-  --bg: #ffffff;
+  /* The page is tinted and the content sits on white above it. One flat white
+   * surface gives a card nothing to be a card against. */
+  --bg: #eff3fc;
+  --card: #ffffff;
   --surface: #f6f7f9;
-  --surface-2: #eceef2;
+  --surface-2: #e7eaf1;
   --line: #d8dce3;
   --text: #0a0a0a;
   /* Barely secondary at all, and deliberately so. Every grey tried here read as
@@ -21,8 +24,13 @@
    * comes from size and weight; colour is not asked to carry any of it. */
   --muted: #1b1c20;
 
+  /* Two different jobs, two different colours, as in the reference. Yellow is
+   * progress — rings, bars, ticks — and never a thing you press. Indigo is the one
+   * button on a page that matters. */
   --accent: #f5c518;
   --on-accent: #1a1a1a;
+  --brand: #3a10e5;
+  --on-brand: #ffffff;
 
   --pass: #157f4d;
   --fail: #c0392b;
@@ -51,6 +59,7 @@
 
 @theme inline {
   --color-bg: var(--bg);
+  --color-card: var(--card);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
@@ -58,6 +67,8 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-on-accent: var(--on-accent);
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
   --color-pass: var(--pass);
   --color-fail: var(--fail);
   --color-ghost: var(--ghost);

@@ -1,10 +1,12 @@
 import Link from "next/link";
 
+import ContinueCard from "@/components/ContinueCard";
+
 import {
   courseProgress,
-  courseStats,
   firstTopic,
   href,
+  latestInProgress,
   percent,
   resumeTarget,
 } from "@/lib/courseProgress";
@@ -30,7 +32,7 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
   const next = resumeTarget(syllabus) ?? firstTopic(syllabus);
   const started = progress.done > 0;
   const finished = resumeTarget(syllabus) === null && progress.total > 0;
-  const stats = courseStats(syllabus);
+  const current = latestInProgress(syllabus);
 
   return (
     <header className="mt-8 mb-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -41,7 +43,7 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
           <div className="mt-7">
             <Link
               href={href(documentId, next)}
-              className="inline-block rounded bg-accent px-7 py-3 font-bold text-on-accent"
+              className="inline-block rounded bg-brand px-7 py-3 font-bold text-on-brand hover:opacity-90"
             >
               {finished ? "Review course" : started ? "Resume course" : "Start learning"}
             </Link>
@@ -66,15 +68,17 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
               </span>
               <span className="w-12 shrink-0 text-sm font-bold tabular-nums">{done}%</span>
             </div>
+
+            {current !== null ? (
+              <ContinueCard documentId={documentId} current={current} />
+            ) : null}
           </section>
         ) : null}
       </div>
 
       <aside className="lg:pt-2">
         <dl className="text-[15px]">
-          <Stat label={`${stats.chapters} chapters`} icon={<BookIcon />} />
-          <Stat label={`${stats.topics} topics`} icon={<ListIcon />} />
-          <Stat label={`${stats.checkpoints} checkpoints`} icon={<CodeIcon />} />
+          <Stat label={`${syllabus.chapters.length} chapters`} icon={<BookIcon />} />
           {document.page_count !== null ? (
             <Stat label={`${document.page_count} pages`} icon={<PageIcon />} />
           ) : null}
@@ -131,22 +135,6 @@ function BookIcon() {
     <svg {...SVG}>
       <path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H19v16H5.5A1.5 1.5 0 0 0 4 20.5z" />
       <path d="M4 17.5A1.5 1.5 0 0 1 5.5 16H19" />
-    </svg>
-  );
-}
-
-function ListIcon() {
-  return (
-    <svg {...SVG}>
-      <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />
-    </svg>
-  );
-}
-
-function CodeIcon() {
-  return (
-    <svg {...SVG}>
-      <path d="m9 17-5-5 5-5M15 7l5 5-5 5" />
     </svg>
   );
 }

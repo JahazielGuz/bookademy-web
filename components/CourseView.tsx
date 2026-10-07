@@ -96,16 +96,21 @@ export default function CourseView({
       ) : null}
 
       {syllabus === null ? null : (
-        <ol className="space-y-8">
-          {syllabus.chapters.map((chapter) => (
-            <ChapterBlock
-              key={chapter.id}
-              chapter={chapter}
-              documentId={documentId}
-              justArrived={arrived.has(chapter.number)}
-            />
-          ))}
-        </ol>
+        <section>
+          <h2 className="mb-5 text-2xl font-bold">Syllabus</h2>
+          {/* One sheet for the whole syllabus, as in the reference. A card per
+              chapter turns a course into a stack of unrelated things. */}
+          <ol className="divide-y divide-line rounded-xl border border-line bg-card px-6 sm:px-8">
+            {syllabus.chapters.map((chapter) => (
+              <ChapterBlock
+                key={chapter.id}
+                chapter={chapter}
+                documentId={documentId}
+                justArrived={arrived.has(chapter.number)}
+              />
+            ))}
+          </ol>
+        </section>
       )}
     </>
   );
@@ -122,8 +127,8 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
   const progress = chapterProgress(chapter);
 
   return (
-    <li className={`${chapter.status === "pending" ? "opacity-45" : ""}`}>
-      <div className="mb-3 flex items-center justify-between gap-4">
+    <li className={`py-7 ${chapter.status === "pending" ? "opacity-45" : ""}`}>
+      <div className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <ProgressRing
             done={progress.done}
@@ -152,7 +157,7 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
       </div>
 
       {chapter.status === "pending" ? null : (
-        <ul className="overflow-hidden rounded-xl border border-line bg-bg">
+        <ul className="mt-1">
           {chapter.topics.map((topic) => (
             <TopicAccordion key={topic.id} topic={topic} documentId={documentId} />
           ))}

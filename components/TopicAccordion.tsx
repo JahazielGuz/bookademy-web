@@ -26,12 +26,12 @@ export default function TopicAccordion({ topic, documentId }: TopicAccordionProp
   const progress = topicProgress(topic);
 
   return (
-    <li className="border-b border-line last:border-b-0">
+    <li>
       <button
         type="button"
         onClick={() => setOpen(!open)}
         disabled={!ready}
-        className={`flex w-full items-center gap-3 px-4 py-3 text-left transition
+        className={`-mx-3 flex w-[calc(100%+1.5rem)] items-center gap-4 rounded-lg px-3 py-4 text-left transition
           ${ready ? "hover:bg-surface" : "cursor-not-allowed opacity-50"}`}
       >
         <ProgressRing
@@ -54,7 +54,7 @@ export default function TopicAccordion({ topic, documentId }: TopicAccordionProp
       </button>
 
       {open && ready ? (
-        <div className="space-y-1 pb-3 pl-14 pr-4">
+        <div className="space-y-1 pb-4 pl-[3.6rem] pr-2">
           <Part
             href={`/courses/${documentId}/topics/${topic.id}`}
             label="Lesson"
