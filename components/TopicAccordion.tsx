@@ -37,7 +37,7 @@ export default function TopicAccordion({ topic, documentId }: TopicAccordionProp
         <ProgressRing
           done={progress.done}
           total={progress.total}
-          size={26}
+          size={42}
           label={`${topic.title} progress`}
         />
         <span className="min-w-0 flex-1">
@@ -91,8 +91,8 @@ type PartProps = {
 
 function Part({ href, label, title, detail, done, total }: PartProps) {
   return (
-    <Link href={href} className="flex items-center gap-3 rounded px-3 py-2 hover:bg-surface">
-      <ProgressRing done={done} total={total} size={20} label={`${label} progress`} />
+    <Link href={href} className="flex items-center gap-3 rounded px-3 py-2.5 hover:bg-surface">
+      <ProgressRing done={done} total={total} size={34} label={label} />
       <span className="w-16 shrink-0 text-sm font-semibold text-muted">{label}</span>
       <span className="min-w-0 flex-1 truncate text-sm font-medium">{title}</span>
       {detail !== undefined ? (

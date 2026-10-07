@@ -128,7 +128,7 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
           <ProgressRing
             done={progress.done}
             total={progress.total}
-            size={28}
+            size={48}
             label={`Chapter ${chapter.number} progress`}
           />
           <div className="min-w-0">
