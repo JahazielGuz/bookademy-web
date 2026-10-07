@@ -1,11 +1,14 @@
 import Link from "next/link";
 
 import AuthForm from "@/components/AuthForm";
+import Wordmark from "@/components/Wordmark";
 
 export default function LoginPage() {
   return (
     <main className="mx-auto max-w-sm px-6 py-20">
-      <h1 className="mb-1 text-2xl font-semibold">BooKademy</h1>
+      <h1 className="mb-2">
+        <Wordmark size="lg" />
+      </h1>
       <p className="mb-8 text-sm text-muted">Sign in to pick up where you left off.</p>
       <AuthForm mode="login" />
       <p className="mt-6 text-sm text-muted">

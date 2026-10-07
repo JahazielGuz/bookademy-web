@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import Wordmark from "@/components/Wordmark";
+
 export type AppHeaderProps = {
   /** Where "back" goes, if this page has somewhere to go back to. */
   backHref?: string;
@@ -15,9 +17,9 @@ export type AppHeaderProps = {
  * like different applications. */
 export default function AppHeader({ backHref, backLabel, title, children }: AppHeaderProps) {
   return (
-    <header className="flex shrink-0 items-center gap-4 bg-header px-6 py-3 text-header-text">
-      <Link href="/library" className="font-semibold tracking-tight">
-        BooKademy
+    <header className="flex shrink-0 items-center gap-4 bg-header px-6 py-4 text-header-text">
+      <Link href="/library" aria-label="BooKademy">
+        <Wordmark onDark />
       </Link>
       {backHref !== undefined ? (
         <>

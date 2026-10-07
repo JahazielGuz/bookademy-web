@@ -1,4 +1,6 @@
 import Link from "next/link";
+
+import Wordmark from "@/components/Wordmark";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -14,7 +16,7 @@ export default async function Home() {
   return (
     <main>
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
-        <span className="font-semibold tracking-tight">BooKademy</span>
+        <Wordmark />
         <div className="flex items-center gap-5 text-sm">
           <Link href="/login" className="text-muted hover:text-text">
             Sign in
@@ -167,7 +169,7 @@ export default async function Home() {
 
       <footer className="border-t border-line">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-8 text-sm text-muted">
-          <span>BooKademy</span>
+          <Wordmark size="sm" />
           <Link href="/login" className="hover:text-text">
             Sign in
           </Link>
