@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import ProgressRing from "@/components/ProgressRing";
+import { topicProgress } from "@/lib/courseProgress";
 import type { TopicSummary } from "@/lib/types";
 
 export type TopicAccordionProps = {
@@ -21,6 +23,7 @@ export type TopicAccordionProps = {
 export default function TopicAccordion({ topic, documentId }: TopicAccordionProps) {
   const ready = topic.status === "ready";
   const [open, setOpen] = useState(false);
+  const progress = topicProgress(topic);
 
   return (
     <li className="border-b border-line last:border-b-0">
@@ -31,7 +34,12 @@ export default function TopicAccordion({ topic, documentId }: TopicAccordionProp
         className={`flex w-full items-center gap-3 px-4 py-3 text-left transition
           ${ready ? "hover:bg-surface" : "cursor-not-allowed opacity-50"}`}
       >
-        <Tick complete={topic.complete} />
+        <ProgressRing
+          done={progress.done}
+          total={progress.total}
+          size={26}
+          label={`${topic.title} progress`}
+        />
         <span className="min-w-0 flex-1">
           <span className="block font-bold">{topic.title}</span>
           <span className="block truncate text-sm text-muted">{topic.summary}</span>
@@ -56,13 +64,15 @@ export default function TopicAccordion({ topic, documentId }: TopicAccordionProp
                 ? `${topic.steps_completed}/${topic.steps_total} checkpoints`
                 : undefined
             }
-            done={topic.steps_total > 0 && topic.steps_completed === topic.steps_total}
+            done={topic.steps_completed}
+            total={Math.max(topic.steps_total, 1)}
           />
           <Part
             href={`/courses/${documentId}/topics/${topic.id}/quiz`}
             label="Quiz"
             title={topic.title}
-            done={topic.quiz_passed}
+            done={topic.quiz_passed ? 1 : 0}
+            total={1}
           />
         </div>
       ) : null}
@@ -75,32 +85,20 @@ type PartProps = {
   label: string;
   title: string;
   detail?: string;
-  done: boolean;
+  done: number;
+  total: number;
 };
 
-function Part({ href, label, title, detail, done }: PartProps) {
+function Part({ href, label, title, detail, done, total }: PartProps) {
   return (
     <Link href={href} className="flex items-center gap-3 rounded px-3 py-2 hover:bg-surface">
-      <Tick complete={done} small />
+      <ProgressRing done={done} total={total} size={20} label={`${label} progress`} />
       <span className="w-16 shrink-0 text-sm font-semibold text-muted">{label}</span>
       <span className="min-w-0 flex-1 truncate text-sm font-medium">{title}</span>
       {detail !== undefined ? (
         <span className="shrink-0 text-xs text-muted">{detail}</span>
       ) : null}
     </Link>
-  );
-}
-
-function Tick({ complete, small = false }: { complete: boolean; small?: boolean }) {
-  const size = small ? "h-5 w-5 text-[11px]" : "h-6 w-6 text-xs";
-  return (
-    <span
-      aria-hidden
-      className={`grid ${size} shrink-0 place-items-center rounded-full border font-bold
-        ${complete ? "border-accent bg-accent text-on-accent" : "border-line text-transparent"}`}
-    >
-      ✓
-    </span>
   );
 }
 
