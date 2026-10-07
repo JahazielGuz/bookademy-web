@@ -59,6 +59,10 @@ export type Syllabus = {
   title: string;
   subject: string;
   description: string;
+  /** Two sentences on what the book teaches. Empty on courses generated before it existed. */
+  summary: string;
+  /** What the learner will be able to do, one phrase each. */
+  outcomes: string[];
   language: Language;
   chapters: Chapter[];
 };

@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import CourseHeader from "@/components/CourseHeader";
 import GenerationProgress from "@/components/GenerationProgress";
+import ProgressRing from "@/components/ProgressRing";
 import TopicAccordion from "@/components/TopicAccordion";
+import { chapterProgress } from "@/lib/courseProgress";
 import type {
   Chapter,
   DocumentSummary,
@@ -73,13 +76,18 @@ export default function CourseView({
 
   return (
     <>
-      <header className="mt-6 mb-8 space-y-2">
-        <p className="text-xs uppercase tracking-wide text-muted">
-          {syllabus?.subject ?? "Reading your document"}
-        </p>
-        <h1 className="text-3xl font-bold">{syllabus?.title ?? initialDocument.title}</h1>
-        {syllabus !== null ? <p className="text-muted">{syllabus.description}</p> : null}
-      </header>
+      {syllabus !== null ? (
+        <CourseHeader
+          documentId={documentId}
+          document={initialDocument}
+          syllabus={syllabus}
+        />
+      ) : (
+        <header className="mt-8 mb-12">
+          <h1 className="text-4xl font-bold">{initialDocument.title}</h1>
+          <p className="mt-3 text-muted">Reading your document.</p>
+        </header>
+      )}
 
       {!finished ? (
         <div className="mb-10">
@@ -111,21 +119,28 @@ type ChapterBlockProps = {
 
 function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
   const writing = chapter.status === "generating";
-  const done = chapter.topics.filter((topic) => topic.complete).length;
+  const progress = chapterProgress(chapter);
 
   return (
     <li className={`${chapter.status === "pending" ? "opacity-45" : ""}`}>
-      <div className="mb-3 flex items-baseline justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-bold">
-            {chapter.number}. {chapter.title}
-          </h2>
-          <p className="text-sm text-muted">
-            {chapter.topics.length} topics · pages {chapter.page_start}–{chapter.page_end}
-            {done > 0 ? ` · ${done} complete` : ""}
-          </p>
+      <div className="mb-3 flex items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <ProgressRing
+            done={progress.done}
+            total={progress.total}
+            size={28}
+            label={`Chapter ${chapter.number} progress`}
+          />
+          <div className="min-w-0">
+            <h2 className="text-xl font-bold">
+              {chapter.number}. {chapter.title}
+            </h2>
+            <p className="text-sm text-muted">
+              {chapter.topics.length} topics · pages {chapter.page_start}–{chapter.page_end}
+            </p>
+          </div>
         </div>
-        <span className="shrink-0 text-xs text-muted">
+        <span className="shrink-0 text-sm text-muted">
           {writing ? (
             <span className="text-accent">writing now…</span>
           ) : chapter.status === "pending" ? (
@@ -137,7 +152,7 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
       </div>
 
       {chapter.status === "pending" ? null : (
-        <ul className="overflow-hidden rounded-lg border border-line bg-bg">
+        <ul className="overflow-hidden rounded-xl border border-line bg-bg">
           {chapter.topics.map((topic) => (
             <TopicAccordion key={topic.id} topic={topic} documentId={documentId} />
           ))}
