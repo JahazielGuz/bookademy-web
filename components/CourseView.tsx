@@ -128,7 +128,7 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
 
   return (
     <li className={`py-7 ${chapter.status === "pending" ? "opacity-45" : ""}`}>
-      <div className="flex items-center justify-between gap-4">
+      <div className="-ml-2 flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <ProgressRing
             done={progress.done}
@@ -157,7 +157,7 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
       </div>
 
       {chapter.status === "pending" ? null : (
-        <ul className="mt-1">
+        <ul className="mt-2 pl-7">
           {chapter.topics.map((topic) => (
             <TopicAccordion key={topic.id} topic={topic} documentId={documentId} />
           ))}

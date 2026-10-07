@@ -35,7 +35,7 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
   const current = latestInProgress(syllabus);
 
   return (
-    <header className="mt-8 mb-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <header className="mt-8 mb-12 grid gap-14 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="min-w-0">
         <h1 className="text-4xl font-bold leading-tight sm:text-5xl">{syllabus.title}</h1>
 
