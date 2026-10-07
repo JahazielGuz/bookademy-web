@@ -19,7 +19,7 @@ export default async function SyllabusPage({ params }: SyllabusPageProps) {
   return (
     <main>
       <AppHeader backHref="/library" backLabel="Library" />
-      <div className="mx-auto max-w-5xl px-6 pb-20">
+      <div className="mx-auto max-w-6xl px-6 pb-20">
       <CourseView
         documentId={Number(documentId)}
         initialDocument={document}
