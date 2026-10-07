@@ -118,18 +118,3 @@ export function href(documentId: number, target: ResumeTarget): string {
   const base = `/courses/${documentId}/topics/${target.topicId}`;
   return target.part === "quiz" ? `${base}/quiz` : base;
 }
-
-export type CourseStats = {
-  chapters: number;
-  topics: number;
-  checkpoints: number;
-};
-
-export function courseStats(syllabus: Syllabus): CourseStats {
-  const topics = syllabus.chapters.flatMap((chapter) => workable(chapter.topics));
-  return {
-    chapters: syllabus.chapters.length,
-    topics: topics.length,
-    checkpoints: topics.reduce((sum, topic) => sum + topic.steps_total, 0),
-  };
-}

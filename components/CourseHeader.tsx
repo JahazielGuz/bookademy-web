@@ -4,7 +4,6 @@ import ContinueCard from "@/components/ContinueCard";
 
 import {
   courseProgress,
-  courseStats,
   firstTopic,
   href,
   latestInProgress,
@@ -33,7 +32,6 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
   const next = resumeTarget(syllabus) ?? firstTopic(syllabus);
   const started = progress.done > 0;
   const finished = resumeTarget(syllabus) === null && progress.total > 0;
-  const stats = courseStats(syllabus);
   const current = latestInProgress(syllabus);
 
   return (
@@ -80,9 +78,7 @@ export default function CourseHeader({ documentId, document, syllabus }: CourseH
 
       <aside className="lg:pt-2">
         <dl className="text-[15px]">
-          <Stat label={`${stats.chapters} chapters`} icon={<BookIcon />} />
-          <Stat label={`${stats.topics} topics`} icon={<ListIcon />} />
-          <Stat label={`${stats.checkpoints} checkpoints`} icon={<CodeIcon />} />
+          <Stat label={`${syllabus.chapters.length} chapters`} icon={<BookIcon />} />
           {document.page_count !== null ? (
             <Stat label={`${document.page_count} pages`} icon={<PageIcon />} />
           ) : null}
@@ -139,22 +135,6 @@ function BookIcon() {
     <svg {...SVG}>
       <path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H19v16H5.5A1.5 1.5 0 0 0 4 20.5z" />
       <path d="M4 17.5A1.5 1.5 0 0 1 5.5 16H19" />
-    </svg>
-  );
-}
-
-function ListIcon() {
-  return (
-    <svg {...SVG}>
-      <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />
-    </svg>
-  );
-}
-
-function CodeIcon() {
-  return (
-    <svg {...SVG}>
-      <path d="m9 17-5-5 5-5M15 7l5 5-5 5" />
     </svg>
   );
 }

@@ -2,7 +2,6 @@ import {
   chapterProgress,
   continueAt,
   courseProgress,
-  courseStats,
   firstTopic,
   href,
   latestInProgress,
@@ -160,17 +159,6 @@ describe("href", () => {
   it("points at the lesson and the quiz of the same topic", () => {
     expect(href(2, { topicId: 5, part: "lesson" })).toBe("/courses/2/topics/5");
     expect(href(2, { topicId: 5, part: "quiz" })).toBe("/courses/2/topics/5/quiz");
-  });
-});
-
-describe("courseStats", () => {
-  it("counts only what a learner can actually open", () => {
-    const course = syllabus([
-      chapter([topic({ id: 1, steps_total: 4 }), topic({ id: 2, status: "pending" })]),
-      chapter([topic({ id: 3, steps_total: 6 })], { id: 2, number: 2 }),
-    ]);
-
-    expect(courseStats(course)).toEqual({ chapters: 2, topics: 2, checkpoints: 10 });
   });
 });
 
