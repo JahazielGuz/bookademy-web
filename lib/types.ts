@@ -118,6 +118,8 @@ export type TopicDetail = {
   position: number;
   title: string;
   summary: string;
+  /** Steers the content call that writes the lesson. Not rendered: a lesson that
+   *  needs a list of what it just said is a lesson that did not say it. */
   key_points: string[];
   status: TopicStatus;
   error: string;
