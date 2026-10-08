@@ -45,8 +45,12 @@ export default function TopicAccordion({ topic, documentId }: TopicAccordionProp
           <span className="block truncate text-sm text-muted">{topic.summary}</span>
         </span>
         {!ready ? (
-          <span className="shrink-0 text-xs text-muted">
-            {topic.status === "failed" ? "failed" : "being written"}
+          <span
+            className={`shrink-0 text-sm font-semibold ${
+              topic.status === "failed" ? "text-fail" : "text-muted"
+            }`}
+          >
+            {topic.status === "failed" ? "Failed" : "Generating"}
           </span>
         ) : (
           <Chevron open={open} />
