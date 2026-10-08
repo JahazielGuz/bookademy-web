@@ -41,10 +41,10 @@ export default async function Home() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
               Upload a programming book. BooKademy reads it, lays out a syllabus of
-              chapters and topics, and generates a lesson for each one. The coding is a
-              step-by-step code-along: the exact code appears in grey, you type it out
-              a line at a time, and each checkpoint is checked before you move on. Then
-              a quiz for each topic.
+              chapters and topics, and generates a lesson and quiz for each one. The
+              coding is a step-by-step code-along: the exact code appears in grey, you
+              type it out a line at a time, and each checkpoint is checked before you
+              move on.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link
