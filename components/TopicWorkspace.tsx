@@ -137,17 +137,6 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
             </section>
           ) : null}
 
-          {topic.key_points.length > 0 ? (
-            <div className="mt-8 rounded-lg border border-line bg-surface-2/60 p-4">
-              <h3 className="mb-2 text-sm font-semibold">You should come away knowing</h3>
-              <ul className="list-disc space-y-1 pl-5 text-[15px] text-muted">
-                {topic.key_points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-
           {exercise !== null && step !== null ? (
             <section className="mt-12 border-t border-line pt-8">
               <p className="text-xs uppercase tracking-wide text-muted">
