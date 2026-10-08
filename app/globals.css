@@ -54,10 +54,32 @@
   --header-text: #e8ecf7;
   --header-muted: #a8b1cb;
 
+  /* VS Code Dark+, named once. The editor, the fenced blocks in a lesson and the
+   * landing page's still of the editor all read from here, so a listing you read
+   * and a listing you type into are the same language in the same colours. */
+  --vs-comment: #6a9955;
+  --vs-keyword: #569cd6;
+  --vs-control: #c586c0;
+  --vs-string: #ce9178;
+  --vs-escape: #d7ba7d;
+  --vs-regexp: #d16969;
+  --vs-number: #b5cea8;
+  --vs-type: #4ec9b0;
+  --vs-function: #dcdcaa;
+  --vs-variable: #9cdcfe;
+  --vs-punctuation: #d4d4d4;
+  --vs-invalid: #f08a8d;
+
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
 @theme inline {
+  --color-vs-keyword: var(--vs-keyword);
+  --color-vs-string: var(--vs-string);
+  --color-vs-function: var(--vs-function);
+  --color-vs-variable: var(--vs-variable);
+  --color-vs-punctuation: var(--vs-punctuation);
+
   --color-bg: var(--bg);
   --color-card: var(--card);
   --color-surface: var(--surface);
@@ -166,7 +188,7 @@ body {
  * uses, so a block you read and a block you type into look like the same language. */
 .prose-bk .hljs-comment,
 .prose-bk .hljs-quote {
-  color: #6a9955;
+  color: var(--vs-comment);
   font-style: italic;
 }
 .prose-bk .hljs-keyword,
@@ -174,47 +196,47 @@ body {
 .prose-bk .hljs-literal,
 .prose-bk .hljs-type,
 .prose-bk .hljs-built_in {
-  color: #569cd6;
+  color: var(--vs-keyword);
 }
 .prose-bk .hljs-section,
 .prose-bk .hljs-name {
-  color: #c586c0;
+  color: var(--vs-control);
 }
 .prose-bk .hljs-string,
 .prose-bk .hljs-regexp,
 .prose-bk .hljs-addition,
 .prose-bk .hljs-attribute,
 .prose-bk .hljs-meta .hljs-string {
-  color: #ce9178;
+  color: var(--vs-string);
 }
 .prose-bk .hljs-number,
 .prose-bk .hljs-symbol,
 .prose-bk .hljs-bullet {
-  color: #b5cea8;
+  color: var(--vs-number);
 }
 .prose-bk .hljs-title,
 .prose-bk .hljs-title.function_,
 .prose-bk .hljs-function .hljs-title {
-  color: #dcdcaa;
+  color: var(--vs-function);
 }
 .prose-bk .hljs-variable,
 .prose-bk .hljs-attr,
 .prose-bk .hljs-template-variable,
 .prose-bk .hljs-property {
-  color: #9cdcfe;
+  color: var(--vs-variable);
 }
 .prose-bk .hljs-class .hljs-title,
 .prose-bk .hljs-title.class_,
 .prose-bk .hljs-params {
-  color: #4ec9b0;
+  color: var(--vs-type);
 }
 .prose-bk .hljs-doctag,
 .prose-bk .hljs-meta,
 .prose-bk .hljs-meta .hljs-keyword {
-  color: #9cdcfe;
+  color: var(--vs-variable);
 }
 .prose-bk .hljs-deletion {
-  color: #f08a8d;
+  color: var(--vs-invalid);
 }
 .prose-bk .hljs-emphasis {
   font-style: italic;
