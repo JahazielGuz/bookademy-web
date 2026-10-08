@@ -192,21 +192,21 @@ const decorationField = StateField.define<DecorationSet>({
  * The ghost text sits at #6f7a8d, duller than any of these, so what you have yet to
  * type still reads as unwritten rather than as another kind of token. */
 const vsCodeDark = HighlightStyle.define([
-  { tag: tags.comment, color: "#6a9955", fontStyle: "italic" },
-  { tag: [tags.keyword, tags.modifier, tags.self, tags.null, tags.bool], color: "#569cd6" },
-  { tag: [tags.controlKeyword, tags.moduleKeyword], color: "#c586c0" },
-  { tag: [tags.string, tags.special(tags.string)], color: "#ce9178" },
-  { tag: tags.escape, color: "#d7ba7d" },
-  { tag: tags.regexp, color: "#d16969" },
-  { tag: [tags.number, tags.integer, tags.float], color: "#b5cea8" },
-  { tag: [tags.typeName, tags.className, tags.namespace], color: "#4ec9b0" },
-  { tag: [tags.function(tags.variableName), tags.function(tags.propertyName)], color: "#dcdcaa" },
-  { tag: [tags.variableName, tags.propertyName, tags.attributeName], color: "#9cdcfe" },
-  { tag: tags.definition(tags.variableName), color: "#9cdcfe" },
-  { tag: [tags.operator, tags.punctuation, tags.separator, tags.bracket], color: "#d4d4d4" },
-  { tag: tags.atom, color: "#569cd6" },
-  { tag: tags.meta, color: "#9cdcfe" },
-  { tag: tags.invalid, color: "#f08a8d" },
+  { tag: tags.comment, color: "var(--vs-comment)", fontStyle: "italic" },
+  { tag: [tags.keyword, tags.modifier, tags.self, tags.null, tags.bool], color: "var(--vs-keyword)" },
+  { tag: [tags.controlKeyword, tags.moduleKeyword], color: "var(--vs-control)" },
+  { tag: [tags.string, tags.special(tags.string)], color: "var(--vs-string)" },
+  { tag: tags.escape, color: "var(--vs-escape)" },
+  { tag: tags.regexp, color: "var(--vs-regexp)" },
+  { tag: [tags.number, tags.integer, tags.float], color: "var(--vs-number)" },
+  { tag: [tags.typeName, tags.className, tags.namespace], color: "var(--vs-type)" },
+  { tag: [tags.function(tags.variableName), tags.function(tags.propertyName)], color: "var(--vs-function)" },
+  { tag: [tags.variableName, tags.propertyName, tags.attributeName], color: "var(--vs-variable)" },
+  { tag: tags.definition(tags.variableName), color: "var(--vs-variable)" },
+  { tag: [tags.operator, tags.punctuation, tags.separator, tags.bracket], color: "var(--vs-punctuation)" },
+  { tag: tags.atom, color: "var(--vs-keyword)" },
+  { tag: tags.meta, color: "var(--vs-variable)" },
+  { tag: tags.invalid, color: "var(--vs-invalid)" },
 ]);
 
 // The editor is the one dark surface on a light page, so it takes the code palette
