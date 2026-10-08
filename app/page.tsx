@@ -36,8 +36,8 @@ export default async function Home() {
             <p className="mb-4 inline-block rounded-full border border-line px-3 py-1 text-xs text-muted">
               Free, and without an account limit
             </p>
-            <h1 className="text-5xl font-semibold leading-[1.1] tracking-tight">
-              Turn any PDF into a course you actually practise.
+            <h1 className="text-5xl font-extrabold leading-[1.05] tracking-tight">
+              Don&rsquo;t just read the book. Do the book!
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
               Upload a programming book. BooKademy reads it, lays out a syllabus of
