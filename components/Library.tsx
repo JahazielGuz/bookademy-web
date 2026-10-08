@@ -30,6 +30,11 @@ export default function Library({ initialDocuments }: LibraryProps) {
     return () => clearInterval(timer);
   }, [working]);
 
+  /** Drop a deleted book from the list without waiting for the next poll. */
+  function forget(id: number) {
+    setDocuments((previous) => previous.filter((document) => document.id !== id));
+  }
+
   async function upload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file === undefined) return;
@@ -83,7 +88,7 @@ export default function Library({ initialDocuments }: LibraryProps) {
         <ul className="space-y-3">
           {documents.map((document) => (
             <li key={document.id}>
-              <DocumentRow document={document} />
+              <DocumentRow document={document} onDeleted={forget} />
             </li>
           ))}
         </ul>
