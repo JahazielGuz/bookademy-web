@@ -4,17 +4,10 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import CourseHeader from "@/components/CourseHeader";
-import GenerationProgress from "@/components/GenerationProgress";
 import ProgressRing from "@/components/ProgressRing";
 import TopicAccordion from "@/components/TopicAccordion";
 import { chapterProgress } from "@/lib/courseProgress";
-import type {
-  Chapter,
-  DocumentSummary,
-  GenerationEvent,
-  Syllabus,
-  TopicSummary,
-} from "@/lib/types";
+import type { Chapter, DocumentSummary, Syllabus, TopicSummary } from "@/lib/types";
 
 export type CourseViewProps = {
   documentId: number;
@@ -22,7 +15,9 @@ export type CourseViewProps = {
   initialSyllabus: Syllabus | null;
 };
 
-const FINISHED: GenerationEvent["kind"][] = ["done"];
+// Slower than the library's four seconds. A chapter takes minutes, so this only has
+// to be faster than someone gets curious.
+const POLL_MS = 5000;
 
 export default function CourseView({
   documentId,
@@ -30,48 +25,38 @@ export default function CourseView({
   initialSyllabus,
 }: CourseViewProps) {
   const [syllabus, setSyllabus] = useState(initialSyllabus);
-  const [events, setEvents] = useState<GenerationEvent[]>([]);
-  const [connected, setConnected] = useState(false);
-  const [finished, setFinished] = useState(
-    initialDocument.status === "ready" || initialDocument.status === "failed",
-  );
-  // Chapters that landed while this page was open, so they can be called out.
-  const [arrived, setArrived] = useState<Set<number>>(new Set());
-  const source = useRef<EventSource | null>(null);
+  const [document, setDocument] = useState(initialDocument);
+  const finished = document.status === "ready" || document.status === "failed";
+  const ready = useRef(initialDocument.chapters_ready);
 
+  /**
+   * While a book is being written, ask what has changed.
+   *
+   * Polling rather than a stream. The page needs one fact — has another chapter
+   * landed — and a held connection, a reconnect cursor and heartbeats are a lot of
+   * machinery to deliver one integer that changes every few minutes.
+   *
+   * The small document endpoint is what gets polled; the syllabus is only refetched
+   * when the chapter count actually moves, so this costs a few hundred bytes a tick
+   * rather than the whole course.
+   */
   useEffect(() => {
     if (finished) return;
 
-    const stream = new EventSource(`/api/django/documents/${documentId}/events`);
-    source.current = stream;
+    const timer = setInterval(async () => {
+      const response = await fetch(`/api/django/documents/${documentId}`);
+      if (!response.ok) return;
+      const latest = (await response.json()) as DocumentSummary;
+      setDocument(latest);
 
-    stream.onopen = () => setConnected(true);
-    stream.onerror = () => setConnected(false);
+      if (latest.chapters_ready === ready.current) return;
+      ready.current = latest.chapters_ready;
 
-    stream.onmessage = async (message) => {
-      const event = JSON.parse(message.data) as GenerationEvent;
-      setEvents((previous) => [...previous, event]);
+      const syllabusResponse = await fetch(`/api/django/documents/${documentId}/syllabus`);
+      if (syllabusResponse.ok) setSyllabus((await syllabusResponse.json()) as Syllabus);
+    }, POLL_MS);
 
-      // A finished chapter is a chapter a learner can start, so pull the syllabus
-      // again and let it render in place.
-      if (event.kind === "chapter_ready" || event.kind === "syllabus_ready") {
-        const response = await fetch(`/api/django/documents/${documentId}/syllabus`);
-        if (response.ok) setSyllabus((await response.json()) as Syllabus);
-        if (event.chapter_number !== null) {
-          setArrived((previous) => new Set(previous).add(event.chapter_number as number));
-        }
-      }
-
-      if (FINISHED.includes(event.kind)) {
-        setFinished(true);
-        stream.close();
-      }
-    };
-
-    return () => {
-      stream.close();
-      source.current = null;
-    };
+    return () => clearInterval(timer);
   }, [documentId, finished]);
 
   return (
@@ -79,21 +64,15 @@ export default function CourseView({
       {syllabus !== null ? (
         <CourseHeader
           documentId={documentId}
-          document={initialDocument}
+          document={document}
           syllabus={syllabus}
         />
       ) : (
         <header className="mt-8 mb-12">
-          <h1 className="text-4xl font-bold">{initialDocument.title}</h1>
+          <h1 className="text-4xl font-bold">{document.title}</h1>
           <p className="mt-3 text-muted">Reading your document.</p>
         </header>
       )}
-
-      {!finished ? (
-        <div className="mb-10">
-          <GenerationProgress events={events} connected={connected} finished={finished} />
-        </div>
-      ) : null}
 
       {syllabus === null ? null : (
         <section>
@@ -102,12 +81,7 @@ export default function CourseView({
               chapter turns a course into a stack of unrelated things. */}
           <ol className="divide-y divide-line rounded-xl border border-line bg-card px-6 sm:px-8">
             {syllabus.chapters.map((chapter) => (
-              <ChapterBlock
-                key={chapter.id}
-                chapter={chapter}
-                documentId={documentId}
-                justArrived={arrived.has(chapter.number)}
-              />
+              <ChapterBlock key={chapter.id} chapter={chapter} documentId={documentId} />
             ))}
           </ol>
         </section>
@@ -119,15 +93,21 @@ export default function CourseView({
 type ChapterBlockProps = {
   chapter: Chapter;
   documentId: number;
-  justArrived: boolean;
 };
 
-function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
-  const writing = chapter.status === "generating";
+/** What a chapter that is not ready yet says for itself, on the right of its row. */
+const CHAPTER_STATE: Record<string, string> = {
+  pending: "Queued",
+  generating: "Generating",
+  failed: "Failed",
+};
+
+function ChapterBlock({ chapter, documentId }: ChapterBlockProps) {
   const progress = chapterProgress(chapter);
+  const state = CHAPTER_STATE[chapter.status];
 
   return (
-    <li className={`py-7 ${chapter.status === "pending" ? "opacity-45" : ""}`}>
+    <li className={`py-7 ${chapter.status === "ready" ? "" : "opacity-50"}`}>
       <div className="-ml-2 flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <ProgressRing
@@ -145,15 +125,15 @@ function ChapterBlock({ chapter, documentId, justArrived }: ChapterBlockProps) {
             </p>
           </div>
         </div>
-        <span className="shrink-0 text-sm text-muted">
-          {writing ? (
-            <span className="text-accent">writing now…</span>
-          ) : chapter.status === "pending" ? (
-            "queued"
-          ) : justArrived ? (
-            <span className="text-pass">just arrived</span>
-          ) : null}
-        </span>
+        {state !== undefined ? (
+          <span
+            className={`shrink-0 text-sm font-semibold ${
+              chapter.status === "failed" ? "text-fail" : "text-muted"
+            }`}
+          >
+            {state}
+          </span>
+        ) : null}
       </div>
 
       {chapter.status === "pending" ? null : (
