@@ -1,9 +1,11 @@
 import Link from "next/link";
 
+import DocumentMenu from "@/components/DocumentMenu";
 import type { DocumentSummary } from "@/lib/types";
 
 export type DocumentRowProps = {
   document: DocumentSummary;
+  onDeleted: (id: number) => void;
 };
 
 const IN_PROGRESS = ["pending", "uploading", "outlining", "generating"];
@@ -31,7 +33,7 @@ function status(document: DocumentSummary): string {
   }
 }
 
-export default function DocumentRow({ document }: DocumentRowProps) {
+export default function DocumentRow({ document, onDeleted }: DocumentRowProps) {
   const working = IN_PROGRESS.includes(document.status);
   // There is something to open the moment the first chapter lands, long before the
   // whole book is done.
@@ -70,6 +72,8 @@ export default function DocumentRow({ document }: DocumentRowProps) {
       ) : working ? (
         <span className="shrink-0 text-xs text-muted">working…</span>
       ) : null}
+
+      <DocumentMenu document={document} onDeleted={onDeleted} />
     </div>
   );
 }
