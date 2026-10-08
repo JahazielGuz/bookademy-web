@@ -101,16 +101,8 @@ export default function DocumentMenu({ document: book, onDeleted }: DocumentMenu
           onConfirm={remove}
         >
           <p>
-            <strong>{book.title}</strong> and everything generated from it will be
-            deleted: the syllabus, every lesson, quiz and exercise, and the PDF itself.
-          </p>
-          <p>
-            Your progress goes with it — every checkpoint you have typed and every quiz
-            you have passed on this book.
-          </p>
-          <p className="text-muted">
-            This cannot be undone. Uploading the PDF again would generate the course
-            from scratch, at the usual cost.
+            <strong>{book.title}</strong> and all progress will be deleted. This cannot
+            be undone.
           </p>
         </ConfirmDialog>
       ) : null}
