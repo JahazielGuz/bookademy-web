@@ -34,7 +34,7 @@ export default async function Home() {
         <div className="grid items-center gap-14 lg:grid-cols-[1fr_minmax(0,520px)]">
           <div>
             <p className="mb-4 inline-block rounded-full border border-line px-3 py-1 text-xs text-muted">
-              Free to start · contact the administrator for more AI tokens
+              Free · AI tokens are granted by the administrator on request
             </p>
             <h1 className="text-5xl font-extrabold leading-[1.05] tracking-tight">
               Don&rsquo;t just read the book. Do the book!
@@ -155,9 +155,9 @@ export default async function Home() {
           </h2>
           <p className="mx-auto mt-5 max-w-xl leading-relaxed text-muted">
             No trial, no credit card, no subscription. Generating a course costs real
-            money in AI tokens, so every account starts with an allowance that covers a
-            full book. Run out and the administrator can top you up — there is nothing
-            to buy.
+            money in AI tokens, so none are issued automatically: create an account,
+            then ask the administrator and they will grant you some. Nothing is for
+            sale — the only thing standing between you and a course is an email.
           </p>
           <Link
             href="/register"
