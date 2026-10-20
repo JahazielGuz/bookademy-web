@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import GhostEditor from "@/components/GhostEditor";
 import ItemFooter from "@/components/ItemFooter";
@@ -61,6 +61,37 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
   const [code, setCode] = useState(step ? step.starter_code : "");
   const [check, setCheck] = useState<CheckState>({ kind: "idle" });
 
+  // The reading pane and the exercise section inside it, for the two scrolls below.
+  const paneRef = useRef<HTMLDivElement>(null);
+  const exerciseRef = useRef<HTMLElement>(null);
+
+  // Whether any of the exercise is on screen. The lesson above it can run long, and a
+  // learner who has not scrolled has no way of knowing the checkpoints are down there —
+  // so while it is out of view, a button floating over the pane offers the jump.
+  const [exerciseInView, setExerciseInView] = useState(true);
+  useEffect(() => {
+    const pane = paneRef.current;
+    const section = exerciseRef.current;
+    if (pane === null || section === null) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setExerciseInView(entry.isIntersecting),
+      { root: pane },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [hasExercise]);
+
+  function scrollToExercise() {
+    exerciseRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  /** Bring one checkpoint's instruction into the middle of the reading pane. */
+  function scrollToStep(id: number) {
+    paneRef.current
+      ?.querySelector(`[data-step="${id}"]`)
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   const hasNextExercise = exerciseIndex < exercises.length - 1;
   const done = exercise ? exercise.steps.filter((s) => completed.has(s.id)).length : 0;
 
@@ -86,6 +117,9 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
         return;
       }
       const result = (await response.json()) as CheckResponse;
+      // Whatever the verdict, show the checkpoint it applies to: the tick on a pass,
+      // the instruction to re-read on a miss.
+      scrollToStep(step.id);
       if (result.passed) {
         setCompleted((previous) => new Set(previous).add(step.id));
         setCheck({ kind: "passed" });
@@ -122,8 +156,11 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex min-h-0 flex-1">
-      {/* Reading pane. Scrolls on its own; the editor beside it does not move. */}
-      <div className="w-1/2 overflow-y-auto border-r border-line bg-card">
+      {/* Reading pane. Scrolls on its own; the editor beside it does not move. The
+          outer div is what the jump button floats over, so the button stays put while
+          the text behind it scrolls. */}
+      <div className="relative flex min-h-0 w-1/2 flex-col border-r border-line bg-card">
+      <div ref={paneRef} className="min-h-0 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-2xl px-8 py-8">
           <p className="text-xs uppercase tracking-wide text-muted">
             Chapter {topic.chapter_number} · {topic.chapter_title}
@@ -138,7 +175,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
           ) : null}
 
           {exercise !== null && step !== null ? (
-            <section className="mt-12 border-t border-line pt-8">
+            <section ref={exerciseRef} className="mt-12 border-t border-line pt-8">
               <p className="text-xs uppercase tracking-wide text-muted">
                 Exercise {exercise.position} of {exercises.length}
               </p>
@@ -160,7 +197,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
                   const passed = completed.has(candidate.id);
                   const active = candidate.id === step.id;
                   return (
-                    <li key={candidate.id} className="flex gap-3">
+                    <li key={candidate.id} data-step={candidate.id} className="flex gap-3">
                       <span
                         aria-hidden
                         className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded border text-[11px] font-bold
@@ -202,9 +239,18 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
               </ol>
             </section>
           ) : null}
-
-
         </div>
+      </div>
+
+      {exercise !== null && !exerciseInView ? (
+        <button
+          type="button"
+          onClick={scrollToExercise}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg"
+        >
+          Jump to the checkpoints ↓
+        </button>
+      ) : null}
       </div>
 
       {/* Code pane. Fixed to the right half; only the editor's own content scrolls. */}
