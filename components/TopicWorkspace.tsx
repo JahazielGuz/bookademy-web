@@ -248,7 +248,7 @@ export default function TopicWorkspace({ topic }: TopicWorkspaceProps) {
           onClick={scrollToExercise}
           className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg"
         >
-          Jump to the checkpoints ↓
+          Jump to the instructions ↓
         </button>
       ) : null}
       </div>
